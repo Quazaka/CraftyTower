@@ -3,9 +3,8 @@ using System.Collections;
 
 public interface Damage
 {
-    int enemyHealth
+    int damage
     {
-        get;
         set;
     }
 }

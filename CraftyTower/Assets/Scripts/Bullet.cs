@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour, Damage {
 
     // Target (set by tower)
     public Transform tra_target;
     public GameObject go_target;
 
     //Bullet damage
-    private int damage;
+    public int damage;
 
     //Speed
     public float speed = 10;
 
-	// Update is called once per frame
-	void FixedUpdate() {
+
+    // Update is called once per frame
+    void FixedUpdate() {
         // Still has a Target?
         if (tra_target)
         {
@@ -33,9 +35,11 @@ public class Bullet : MonoBehaviour {
     // Monster Hit
     void OnTriggerEnter(Collider co)
     {
-        if (co.name == "Enemy")
+        EnemyController p = co.GetComponent<EnemyController>();
+        if (co.tag == "Enemy")
         {
-
+            p.Damage = damage;
+            
         }
 
     }
