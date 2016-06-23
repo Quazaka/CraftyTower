@@ -24,8 +24,8 @@ Thumbs.db
 # =============== #
 # Unity generated #
 # =============== #
-Temp/
-Library/
+CraftyTower/Temp/
+CraftyTower/Library/
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
