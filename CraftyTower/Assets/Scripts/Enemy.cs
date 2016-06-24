@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour, Damage {
     private GameObject Tower;
     private Vector3 towerPos;
 
-    int hp = 100;
+    public int hp = 10;
     public float moveSpeed = 5f;
 
 	// Use this for initialization
@@ -33,6 +33,11 @@ public class Enemy : MonoBehaviour, Damage {
     void TakeDamage(int damage)
     {
         hp = hp - damage;
+
+        if (hp <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Move()

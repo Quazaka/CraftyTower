@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour {
     public Transform target;
 
     //Bullet damage
-    public int damage = 1;
+    public int damage;
 
     //Speed
     public float speed = 10;
@@ -40,6 +40,7 @@ public class Projectile : MonoBehaviour {
         {
             enemyHit = (Damage)co.GetComponent<Enemy>();
             enemyHit.damage = damage;
+            Destroy(gameObject);
         }
     }
 }
