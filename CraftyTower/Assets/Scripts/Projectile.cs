@@ -2,14 +2,16 @@
 using System.Collections;
 using System;
 
-public class Bullet : MonoBehaviour, Damage {
+public class Projectile : MonoBehaviour {
+
+    private Damage enemyHit;
 
     // Target (set by tower)
     public Transform tra_target;
     public GameObject go_target;
 
     //Bullet damage
-    public int damage;
+    public int damage = 1;
 
     //Speed
     public float speed = 10;
@@ -35,12 +37,10 @@ public class Bullet : MonoBehaviour, Damage {
     // Monster Hit
     void OnTriggerEnter(Collider co)
     {
-        EnemyController p = co.GetComponent<EnemyController>();
-        if (co.tag == "Enemy")
+        if (co.GetComponent<Enemy>())
         {
-            p.Damage = damage;
-            
+            enemyHit = (Damage)co.GetComponent<Enemy>();
+            enemyHit.damage = damage;
         }
-
     }
 }
