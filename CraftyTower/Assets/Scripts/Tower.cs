@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tower : MonoBehaviour, Damage {
+public class Tower : MonoBehaviour, IDamage {
 
     public GameObject weaponPrefab;
 
-    public int health = 100;
+    public float health = 100;
 
 	// Use this for initialization
 	void Start () {
@@ -22,13 +22,13 @@ public class Tower : MonoBehaviour, Damage {
 	}
 
     // From Damage interface
-    public int damage
+    public float damage
     {
         set { TakeDamage(value); }
     }
 
     // Take damage from enemies
-    private void TakeDamage(int damage)
+    private void TakeDamage(float damage)
     {
         health -= damage;
 

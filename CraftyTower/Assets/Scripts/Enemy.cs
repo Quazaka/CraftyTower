@@ -5,7 +5,7 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
 
     private GameObject Tower;
     private Vector3 towerPos;
-    private Damage target;
+    private IDamage target;
     private bool stop = false;
 
 

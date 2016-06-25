@@ -78,6 +78,7 @@ public class SpawnController : MonoBehaviour {
         return hp;
         //TODO Implement claculations to predict enemy hp based on the wave number
 
+    }
     void KillAllCreeps()
     {
         // Cancel all invoked calls - stop spawning enemies
