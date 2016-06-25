@@ -1,16 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour, Damage {
+public class Enemy : MonoBehaviour, IDamage, IHealth {
 
     private GameObject Tower;
     private Vector3 towerPos;
 
-    public int hp = 10;
+    public float hp;
     public float moveSpeed = 5f;
+     
 
-	// Use this for initialization
-	void Start ()
+    //Damage interface
+    public float damage
+    {
+        set { TakeDamage(value); }
+    }
+
+    //Health interface
+    public float health
+    {
+        get {return hp; } //Read enemy hp
+        set { hp = value;} //Set enenmy base spawming hp. //TODO{Overwride in subclasses}
+    }
+
+    // Use this for initialization
+    void Start ()
     {
         Tower = GameObject.FindGameObjectWithTag("Tower");
         towerPos = Tower.transform.position;
@@ -24,13 +38,9 @@ public class Enemy : MonoBehaviour, Damage {
         Move();
 	}
 
-    public int damage
-    {
-        set {TakeDamage(value);}
-    }
 
     //Take damage from bullet
-    void TakeDamage(int damage)
+    void TakeDamage(float damage)
     {
         hp = hp - damage;
 

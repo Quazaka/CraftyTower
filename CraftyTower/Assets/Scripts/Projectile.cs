@@ -4,13 +4,13 @@ using System;
 
 public class Projectile : MonoBehaviour {
 
-    private Damage enemyHit;
+    private IDamage enemyHit;
 
     // Target (set by tower)
     public Transform target;
 
     //Bullet damage
-    public int damage;
+    public float damage;
 
     //Speed
     public float speed = 10;
@@ -38,7 +38,7 @@ public class Projectile : MonoBehaviour {
     {
         if (co.GetComponent<Enemy>())
         {
-            enemyHit = (Damage)co.GetComponent<Enemy>();
+            enemyHit = (IDamage)co.GetComponent<Enemy>();
             enemyHit.damage = damage;
             Destroy(gameObject);
         }

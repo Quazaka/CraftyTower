@@ -10,6 +10,10 @@ public class SpawnController : MonoBehaviour {
     private Vector3 enemyHeight;
     public GameObject enemyPrefab;
 
+    //enemy hp placeholder //TODO Retrive hp from calcEnemyHP()
+    private float hp = 10;
+
+    //Unit spawn rate
     public float spawnRate = 1.0f;
 
 	// Use this for initialization
@@ -25,6 +29,10 @@ public class SpawnController : MonoBehaviour {
         ChooseSpawn();
         GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnPos + (enemyHeight / 2), Quaternion.identity) as GameObject;
         spawnedEnemy.transform.parent = curSpawn.transform;
+
+        //Set hp using IHealth
+        IHealth enemyHealth = spawnedEnemy.GetComponent<Enemy>();
+        enemyHealth.health = calcEnemyHP();
     }
 
     void ChooseSpawn()
@@ -40,5 +48,12 @@ public class SpawnController : MonoBehaviour {
         {
             spawnPos.x = Random.Range(-19.5f, 19.5f);
         }        
+    }
+
+    //Calculate enemy base hp based on wave
+    float calcEnemyHP()
+    {
+        return hp;
+        //TODO Implement claculations to predict enemy hp based on the wave number
     }
 }

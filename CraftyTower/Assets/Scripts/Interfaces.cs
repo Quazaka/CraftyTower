@@ -1,13 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface Damage
+public interface IDamage
 {
-    int damage
+    float damage
     {
         set;
     }
 }
-
+public interface IHealth
+{
+    float health
+    {
+        get;
+        set;
+    } 
+}
 
 
