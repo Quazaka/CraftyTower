@@ -9,24 +9,33 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     private bool stop = false;
 
 
-    public float hp = 10;
+    public float hp;
+    public float futureHp;
     public int attackDmg = 1;
     public float attackRate = 1f;
     private float nextAttack = 0; 
     public float moveSpeed = 5f;
 
-    //Damage interface
+    //IDamage
     public float damage
     {
         set { TakeDamage(value); }
     }
 
-    //Health interface
+    //IHealth - real health
     public float health
     {
         get { return hp; } //Read enemy hp
         set { hp = value; } //Set enenmy base spawming hp. //TODO{Overwride in subclasses}
     }
+
+    //IHealth - future health, used to prevent overkill
+    public float futureHealth
+    {
+        get { return futureHp; }
+        set { futureHp = value; }
+    }
+
 
     // Use this for initialization
     void Start ()

@@ -14,7 +14,12 @@ public interface IHealth
     {
         get;
         set;
-    } 
+    }
+    float futureHealth
+    {
+        get;
+        set;
+    }
 }
 
 

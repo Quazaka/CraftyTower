@@ -49,6 +49,7 @@ public class SpawnController : MonoBehaviour {
         //Set hp using IHealth
         IHealth enemyHealth = spawnedEnemy.GetComponent<Enemy>();
         enemyHealth.health = calcEnemyHP();
+        enemyHealth.futureHealth = calcEnemyHP();
     }
 
     // Choose a random spawn 
