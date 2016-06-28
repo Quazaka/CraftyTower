@@ -29,6 +29,8 @@ public class ArrowBase : WeaponBase {
         projectile.GetComponent<ArrowProjectile>().target = currentTarget.transform; //set target
 
         //Set future health to prevent overkill
+        //IHealth enemyHealth = currentTarget.GetComponent<Enemy>();
+        //enemyHealth.futureHealth -= projectile.GetComponent<ArrowProjectile>().damage;
     }
 
 }
