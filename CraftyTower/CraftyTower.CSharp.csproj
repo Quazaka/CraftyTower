@@ -65,10 +65,13 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Interfaces.cs" />
-    <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\Scripts\SpawnController.cs" />
     <Compile Include="Assets\Scripts\Tower.cs" />
-    <Compile Include="Assets\Scripts\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Weapon\ArrowWeapon\ArrowBase.cs" />
+    <Compile Include="Assets\Scripts\Weapon\ArrowWeapon\ArrowProjectile.cs" />
+    <Compile Include="Assets\Scripts\Weapon\ProjectileBase.cs" />
+    <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />
+    <Compile Include="Assets\Scripts\Weapon\WeaponBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

@@ -2,18 +2,18 @@
 using System.Collections;
 using System;
 
-public class Projectile : MonoBehaviour {
+public abstract class ProjectileBase : MonoBehaviour {
 
     private IDamage enemyHit;
 
-    // Target (set by tower)
+    // Target (set by weapon)
     public Transform target;
 
     //Bullet damage
-    public float damage;
+    public abstract float damage { get; }
 
     //Speed
-    public float speed = 10;
+    public abstract float speed { get; }
 
 
     // Update is called once per frame
