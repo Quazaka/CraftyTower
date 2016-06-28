@@ -2,9 +2,9 @@
 using System.Collections;
 using System;
 
-public abstract class ProjectileBase : MonoBehaviour {
+public abstract class BaseProjectile : MonoBehaviour {
 
-    private IDamage enemyHit;
+    protected IDamage enemyHit;
 
     // Target (set by weapon)
     public Transform target;
@@ -15,13 +15,13 @@ public abstract class ProjectileBase : MonoBehaviour {
     //Speed
     public abstract float speed { get; }
 
-
     // Update is called once per frame
     void FixedUpdate() {
         // Still has a Target?
         if (target)
         {
-            // Fly towards the target        
+            // Fly towards and face target        
+            transform.rotation = Quaternion.LookRotation(target.transform.position)* Quaternion.Euler(0, 90, 0); // 90 degrees to face enemy correctly
             Vector3 dir = target.position - transform.position;
             GetComponent<Rigidbody>().velocity = dir.normalized * speed;
         }
@@ -30,11 +30,10 @@ public abstract class ProjectileBase : MonoBehaviour {
             // Otherwise destroy self
             Destroy(gameObject);
         }
-
     }
 
     // Monster Hit
-    void OnTriggerEnter(Collider co)
+    protected virtual void OnTriggerEnter(Collider co)
     {
         if (co.GetComponent<Enemy>())
         {

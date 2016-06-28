@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class WeaponBase : MonoBehaviour {
+public abstract class BaseWeapon : MonoBehaviour {
     //Projectile
     public GameObject projectilePrefab;
 
@@ -47,8 +47,8 @@ public abstract class WeaponBase : MonoBehaviour {
             {
                 //Targeting script
                 Targeting scriptTargetinng = GetComponent<Targeting>();
-
                 GameObject currentTarget = scriptTargetinng.ChooseTargetScanType(enemyList, targetSwitch);
+
                 if (isTargetNull(currentTarget)) { enemyList.Remove(currentTarget); break; }
                 //Access target futureHealth using IHealth
                 IHealth enemyHealth = currentTarget.GetComponent<Enemy>();
@@ -91,6 +91,27 @@ public abstract class WeaponBase : MonoBehaviour {
         }
     }
 
-    //Shoot projectile at target
-    protected abstract void Shoot(GameObject currentTarget);
+    //Arrow implementation of shoot
+    protected void Shoot(GameObject currentTarget)
+    {
+        GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
+
+        if (currentTarget == null)
+        {
+            RemoveNullObjectFromList(enemyList); //Remove null objects from target list
+            return;
+        }
+        projectile = setTarget(projectile, currentTarget);
+
+        //Set future health to prevent overkill
+        float projectileDamage = GetProjectileDamage(projectile);
+
+        IHealth enemyHealth = currentTarget.GetComponent<Enemy>();
+        enemyHealth.futureHealth -= projectileDamage;
+    }
+
+    //Set target in subclass to ensure corret script is initialzed on projectile
+    protected abstract GameObject setTarget(GameObject projectile, GameObject currentTarget);
+
+    protected abstract float GetProjectileDamage(GameObject projectile);
 }

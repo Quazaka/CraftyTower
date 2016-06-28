@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Tower : MonoBehaviour, IDamage {
 
-    public GameObject weaponPrefab;
+    public GameObject arrowWeaponPrefab;
+    public GameObject cannonWeaponPrefab;
 
     public float health = 100;
 
@@ -16,7 +17,7 @@ public class Tower : MonoBehaviour, IDamage {
 	void Update () {
         if(Input.GetKeyDown("space"))
         {
-            GameObject wep = Instantiate(weaponPrefab, transform.position, Quaternion.identity) as GameObject;
+            GameObject wep = Instantiate(cannonWeaponPrefab, transform.position, Quaternion.identity) as GameObject;
             Debug.Log("Space pressed");
         }
 	}

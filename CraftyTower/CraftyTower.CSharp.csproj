@@ -67,11 +67,14 @@
     <Compile Include="Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\Scripts\SpawnController.cs" />
     <Compile Include="Assets\Scripts\Tower.cs" />
-    <Compile Include="Assets\Scripts\Weapon\ArrowWeapon\ArrowBase.cs" />
-    <Compile Include="Assets\Scripts\Weapon\ArrowWeapon\ArrowProjectile.cs" />
-    <Compile Include="Assets\Scripts\Weapon\ProjectileBase.cs" />
+    <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />
+    <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />
+    <Compile Include="Assets\Scripts\Weapon\BaseProjectile.cs" />
+    <Compile Include="Assets\Scripts\Weapon\BaseWeapon.cs" />
+    <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonAOE.cs" />
+    <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonProjectile.cs" />
+    <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />
-    <Compile Include="Assets\Scripts\Weapon\WeaponBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

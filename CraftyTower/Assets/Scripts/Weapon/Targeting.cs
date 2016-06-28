@@ -83,6 +83,7 @@ public class Targeting : MonoBehaviour {
         return enemies[i];
     }
 
+    //TODO Test this
     //Pick unit with highest health
     //TargetSwitch 4
     GameObject GetHighestHealthEnemy(List<GameObject> enemies)
@@ -102,6 +103,7 @@ public class Targeting : MonoBehaviour {
         return highestHealthTarget;
     }
 
+    //TODO Test this
     //Pick unit with lowest health
     //TargetSwitch 5
     GameObject GetLowestHealthEnemy(List<GameObject> enemies)

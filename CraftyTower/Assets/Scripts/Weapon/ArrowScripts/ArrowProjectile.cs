@@ -2,8 +2,9 @@
 using System.Collections;
 using System;
 
-public class ArrowProjectile : ProjectileBase
+public class ArrowProjectile : BaseProjectile
 {
+
     public override float damage
     {
         get{ return 5.0f; }
