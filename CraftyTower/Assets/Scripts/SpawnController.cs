@@ -63,11 +63,12 @@ public class SpawnController : MonoBehaviour {
                 yield return new WaitForSeconds(spawnRate);
             }
 
-            // modifying spawnrate after each wave
+            // modifying spawnrate after each wave, lowest spawnrate is 10 creeps per second.
             // TODO make a function that modifies health, movespeed, damage etc using the interface.
-            spawnRate /= spawnRateModifier;
+            if (spawnRate > 0.1f) { spawnRate /= spawnRateModifier; }            
 
             Debug.Log("Wave over");
+
             yield return new WaitForSeconds(waveWait);           
         }        
     }
