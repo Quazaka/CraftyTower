@@ -18,7 +18,8 @@ public abstract class BaseWeapon : MonoBehaviour {
 
     void Start()
     {
-        //Set range on weapon/spear collider
+        //TODO Consider - Change from sphear collider to OverlapSphere for better target handling
+        //Set range on weapon/sphear collider
         SphereCollider sc = GetComponent("SphereCollider") as SphereCollider;
         sc.radius = range;
         StartCoroutine(Co_ShootAtEnemies());
