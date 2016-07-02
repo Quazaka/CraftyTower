@@ -57,7 +57,6 @@ public abstract class BaseWeapon : MonoBehaviour {
                 if (enemyHealth.futureHealth > 0)
                 {
                     Shoot(currentTarget);
-                    Debug.Log("Shooting");
                 }
                 else
                 {
@@ -82,18 +81,15 @@ public abstract class BaseWeapon : MonoBehaviour {
 
     protected void RemoveNullObjectFromList(List<GameObject> enemies)
     {
-        foreach(GameObject Target in enemies)
-        {
-            if (Target == null)
-            {
-                enemies.Remove(Target);
-            }
-        }
+        enemyList = enemyList.Where(item => item != null).ToList();
+
     }
 
     //Arrow implementation of shoot
     protected void Shoot(GameObject currentTarget)
     {
+        RemoveNullObjectFromList(enemyList);
+
         GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
 
         if (currentTarget == null)

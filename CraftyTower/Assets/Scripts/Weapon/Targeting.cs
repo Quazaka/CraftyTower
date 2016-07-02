@@ -124,7 +124,7 @@ public class Targeting : MonoBehaviour {
     }
 
     //Check for null reference
-    bool isTargetNull(GameObject currentTarget)
+    private bool isTargetNull(GameObject currentTarget)
     {
         if (currentTarget == null)
         {

@@ -73,7 +73,6 @@
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\BaseProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\BaseWeapon.cs" />
-    <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonAOE.cs" />
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />

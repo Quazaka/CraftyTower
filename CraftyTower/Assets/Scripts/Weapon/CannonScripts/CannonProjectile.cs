@@ -2,15 +2,15 @@
 
 public class CannonProjectile : BaseProjectile
 {
-    //Splash radius
-    float AOERadius = 0.7f;
+    //Interfaces
+    protected IDamage enemy;
 
-    //AOEDmagePrefab object - Must for multiple colliders
-    public GameObject AOEDamagePrefab;
+    //Splash radius
+    private float AOERadius = 2.0f;
 
     public override float damage
     {
-        get { return 10.0f ; }
+        get { return 5.0f; }
     }
 
     public override float speed
@@ -23,16 +23,28 @@ public class CannonProjectile : BaseProjectile
     {
         if (co.GetComponent<Enemy>())
         {
-            DealAOEDamage(AOERadius, damage);
+            DealAOEDamage2(AOERadius, transform.position);
         }
     }
 
     //Instantiate AOEDamagePrefab with AOEDamage collider
-    private void DealAOEDamage(float AOERadius, float damage)
+    private void DealAOEDamage2(float radius, Vector3 center)
     {
-        GameObject AOECollider = (GameObject)Instantiate(AOEDamagePrefab, transform.position, Quaternion.identity);
-        AOECollider.transform.parent = transform;
-        AOECollider.GetComponent<CannonAOE>().DealAOEDamage(AOERadius, damage);
+        Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+        int i = 0;
+        while (i < hitColliders.Length)
+        {
+            if (hitColliders[i].GetComponent<Enemy>())
+            {
+                if (hitColliders[i] != null)
+                {
+                    enemy = (IDamage)hitColliders[i].GetComponent<Enemy>();
+                    enemy.damage = damage;
+                    Destroy(gameObject);
+                }
+            }
+            i++;
+        }
         Destroy(gameObject);
     }
 }

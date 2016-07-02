@@ -13,13 +13,17 @@ public class CannonWeapon : BaseWeapon
     {
         get{ return 15.0f; }
     }
+
+    //Get damage
     protected override float GetProjectileDamage(GameObject projectile)
     {
         return projectile.GetComponent<CannonProjectile>().damage;
     }
+
+    //set target
     protected override GameObject setTarget(GameObject projectile, GameObject currentTarget)
     {
-        projectile.GetComponent<CannonProjectile>().target = currentTarget.transform; //set target
+        projectile.GetComponent<CannonProjectile>().target = currentTarget.transform; 
 
         return projectile;
     }

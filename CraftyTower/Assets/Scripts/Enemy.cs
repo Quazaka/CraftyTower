@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Enemy : MonoBehaviour, IDamage, IHealth {
-
+    #region initialization
     private GameObject Tower;
     private Vector3 towerPos;
     private IDamage target;
@@ -35,10 +35,10 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
         get { return futureHp; }
         set { futureHp = value; }
     }
-
+    #endregion initialization
 
     // Use this for initialization
-    void Start ()
+    private void Start ()
     {
         // Find tower object
         Tower = GameObject.FindGameObjectWithTag("Tower");
@@ -58,7 +58,7 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     }
 
 	// Update is called once per frame
-	void FixedUpdate ()
+	private void FixedUpdate ()
     {
         // if we haven't reached tower - keep moving
         if (!stop)
@@ -69,8 +69,9 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
 
 
     //Take damage from bullet
-    void TakeDamage(float damage)
+    private void TakeDamage(float damage)
     {
+        StartCoroutine(ChangeEnemyColorOnHit());
         hp -= damage;
 
         if (hp <= 0)
@@ -80,13 +81,13 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     }
 
     // Move the creep towards the tower in real time
-    void Move()
+    private void Move()
     {
         this.transform.position = Vector3.MoveTowards(this.transform.position, towerPos, moveSpeed * Time.deltaTime);
     }
 
     // Stop creep when hitting tower
-    void OnTriggerEnter(Collider co)
+    private void OnTriggerEnter(Collider co)
     {
         if(co.name == "Tower")
         {
@@ -95,7 +96,7 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     }
 
     // Attack tower while creep is still in trigger
-    void OnTriggerStay(Collider co)
+    private void OnTriggerStay(Collider co)
     {
         // Attack tower
         if (co.name == "Tower")
@@ -108,4 +109,29 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
             }         
         }
     }
+
+    //Shortly change color on enemy when hit.
+    #region
+    IEnumerator ChangeEnemyColorOnHit()
+    {
+        Color normalColor = gameObject.GetComponent<Renderer>().material.color;
+
+        SetHitColor();
+        yield return new WaitForSeconds(0.10f);
+        SetNormalColor(normalColor);
+    }
+
+    private void SetHitColor()
+    {
+        gameObject.GetComponent<Renderer>().material.color = Color.red;
+        return;
+    }
+
+    private void SetNormalColor(Color normalColor)
+    {
+        gameObject.GetComponent<Renderer>().material.color = normalColor;
+        return;
+    }
+    #endregion  
+
 }

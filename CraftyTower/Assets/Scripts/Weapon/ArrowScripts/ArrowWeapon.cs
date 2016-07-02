@@ -15,11 +15,13 @@ public class ArrowWeapon : BaseWeapon {
         get { return 10.0f; }
     }
 
+    //Get damage
     protected override float GetProjectileDamage(GameObject projectile)
     {
         return projectile.GetComponent<ArrowProjectile>().damage;
     }
 
+    //Set Target
     protected override GameObject setTarget(GameObject projectile, GameObject currentTarget)
     {
         projectile.GetComponent<ArrowProjectile>().target = currentTarget.transform; //set target
