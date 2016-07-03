@@ -9,8 +9,10 @@ public class WeaponChooser : MonoBehaviour
     //Weapon creation handling:
     private List<GameObject> weapons = new List<GameObject>(); //A list of all the weapons
     private GameObject selectedWeapon; // GameObj of the option selected in the dropdown
-    public List<string> availableWeapons = new List<string>(); // name of weapons (prefab names) - DropDown data
-    public Dropdown weaponSelector;
+    private List<string> availableWeapons = new List<string>(); // name of weapons (prefab names) - DropDown data
+
+    [SerializeField]
+    private Dropdown weaponSelector;
 
     private Vector3 towerPos;
 
@@ -44,6 +46,7 @@ public class WeaponChooser : MonoBehaviour
     }
 
     // Update is called once per frame
+    // TODO: When new weapons are activated, add them to the dropdown
     void Update()
     {
 

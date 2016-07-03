@@ -67,7 +67,7 @@
     <Compile Include="Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\Scripts\SpawnController.cs" />
     <Compile Include="Assets\Scripts\Tower.cs" />
-    <Compile Include="Assets\Scripts\UI\PanelButton.cs" />
+    <Compile Include="Assets\Scripts\UI\ToggleBtn.cs" />
     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PanelButton : MonoBehaviour {
+public class ToggleBtn : MonoBehaviour {
 
     // Toggle the panel on/off
     // TODO: Add a button that opens the panel - add this script
