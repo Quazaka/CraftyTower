@@ -18,14 +18,10 @@ public abstract class BaseWeapon : MonoBehaviour {
 
     void Start()
     {
-        //TODO Consider - Change from sphear collider to OverlapSphere for better target handling
-        //Set range on weapon/sphear collider
-        SphereCollider sc = GetComponent("SphereCollider") as SphereCollider;
-        sc.radius = range;
         StartCoroutine(Co_ShootAtEnemies());
+        StartCoroutine(Co_UpdateEnemyList());
     }
 
-    // Update is called once per frame
     void Update () {
 
     }
@@ -39,7 +35,44 @@ public abstract class BaseWeapon : MonoBehaviour {
         }
     }
 
-    //Detect closest unit and shoot.
+    //Get enemies in range of a center
+    private List<GameObject> GetEnemisInRange(Vector3 center, float radius)
+    {
+        //OverlapSphere returns an array - converted to list here
+        Collider[] hitCollidersArray = Physics.OverlapSphere(center, radius);
+        List<GameObject> hitCollidersList = new List<GameObject>();
+
+        //"Convert" the Array<Collider> to List<GameObject>
+        for (int i = 0; i < hitCollidersArray.Length; i++)
+        {
+            hitCollidersList.Add(hitCollidersArray[i].gameObject);
+        } 
+
+        //Remove non enemies from list
+        for (int i = hitCollidersList.Count - 1; i >= 0; i--)
+        {
+            if (!hitCollidersList[i].GetComponent<Enemy>())
+            {
+                hitCollidersList.RemoveAt(i);
+            }
+        }
+
+        //Return list
+        return hitCollidersList;
+    }
+
+    //Get Every enemy in range and add them to enemy list
+    IEnumerator Co_UpdateEnemyList()
+    {
+        while (true)
+        {
+            enemyList = GetEnemisInRange(transform.position, range);
+
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    //Select targeted unit and shoot.
     IEnumerator Co_ShootAtEnemies()
     {
         while (true)
