@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnController : MonoBehaviour {
-   
+public class SpawnController : MonoBehaviour, IGameOver {
+
     private GameObject[] spawns;    
 
     private Vector3 enemyHeight;
@@ -13,6 +13,9 @@ public class SpawnController : MonoBehaviour {
     //enemy hp placeholder //TODO Retrive hp from calcEnemyHP()
     private float hp = 10;
 
+    // GameOver bool
+    private bool _isGameOver;
+
     //Unit spawn rate
     public float spawnRate = 1.0f; // wait one second before spawning next unit
     public float spawnRateModifier = 1.1f; // make units spawn 10% faster each wave
@@ -21,8 +24,14 @@ public class SpawnController : MonoBehaviour {
     private float waveTime = 10; // 10 second wave
     private float waveWait = 5; // wait 5 seconds before starting new wave    
 
-	// Use this for initialization
-	void Start ()
+    public bool isGameOver
+    {
+        get { return _isGameOver; }
+        set { _isGameOver = value; }
+    }
+
+    // Use this for initialization
+    void Start ()
     {        
         // Fill spawn array and get enemy height.
         spawns = GameObject.FindGameObjectsWithTag("Spawn");
@@ -31,14 +40,9 @@ public class SpawnController : MonoBehaviour {
         StartCoroutine(StartNextWave());
 	}
 
-    void Update()
-    {
-
-    }
-
     IEnumerator StartNextWave()
     {        
-        while (true)
+        while (!_isGameOver)
         {   
             // Resetting time passed when starting new wave         
             float timePassed = 0;
@@ -46,7 +50,7 @@ public class SpawnController : MonoBehaviour {
 
             Debug.Log("Starting new wave");
 
-            while (timePassed < waveTime)
+            while (timePassed < waveTime && !_isGameOver)
             {
                 SpawnNext();
 

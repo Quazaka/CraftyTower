@@ -22,4 +22,13 @@ public interface IHealth
     }
 }
 
+public interface IGameOver
+{
+    bool isGameOver
+    {
+        get;
+        set;
+    }
+}
+
 

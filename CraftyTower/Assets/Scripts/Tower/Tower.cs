@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Tower : MonoBehaviour, IDamage {
 
+    public delegate void GameOver();
+    public static event GameOver onGameOver;
+
     // TODO: Make the healthbar use its own script
 
     [SerializeField] // Have this field as private but force unity to show it in the editor
@@ -45,7 +48,10 @@ public class Tower : MonoBehaviour, IDamage {
         //Deactiavte towerobject if health is below zero
         if (currentHealth <= 0)
         {
-            Destroy(gameObject);
+            if (onGameOver != null)
+            {
+                onGameOver();
+            }
         }
 
         // map the health to the sprite and set the health text
@@ -63,5 +69,5 @@ public class Tower : MonoBehaviour, IDamage {
     private void setHealthText()
     {
         healthText.text = currentHealth + "/" + startingHealth;
-    }
+    }       
 }
