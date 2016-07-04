@@ -35,9 +35,9 @@ public abstract class BaseProjectile : MonoBehaviour {
     // Monster Hit
     protected virtual void OnTriggerEnter(Collider co)
     {
-        if (co.GetComponent<Enemy>())
+        if (co.GetComponent<BaseEnemy>())
         {
-            enemyHit = (IDamage)co.GetComponent<Enemy>();
+            enemyHit = (IDamage)co.GetComponent<BaseEnemy>();
             enemyHit.damage = damage;
             Destroy(gameObject);
         }

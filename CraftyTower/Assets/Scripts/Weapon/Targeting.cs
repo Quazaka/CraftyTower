@@ -93,7 +93,7 @@ public class Targeting : MonoBehaviour {
 
         foreach  (GameObject potentialTarget in enemies)
         {
-            IHealth enemy = potentialTarget.GetComponent<Enemy>();
+            IHealth enemy = potentialTarget.GetComponent<BaseEnemy>();
             if (enemy.futureHealth > highestHealth)
             {
                 highestHealthTarget = potentialTarget;
@@ -113,7 +113,7 @@ public class Targeting : MonoBehaviour {
 
         foreach (GameObject potentialTarget in enemies)
         {
-            IHealth enemy = potentialTarget.GetComponent<Enemy>();
+            IHealth enemy = potentialTarget.GetComponent<BaseEnemy>();
             if (enemy.futureHealth > lowestHealth)
             {
                 lowestHealthTarget = potentialTarget;

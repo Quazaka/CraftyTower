@@ -1,20 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour, IDamage, IHealth {
+public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     #region initialization
-    private GameObject Tower;
+    private IWaveLevel WaveLevel;
+
+    protected GameObject Tower;
     private Vector3 towerPos;
     private IDamage target;
     private bool stop = false;
 
+    [SerializeField]
+    protected float _attackDmg;
+    [SerializeField]
+    protected float _attackRate;
+    [SerializeField]
+    protected float _damageReduction;
+    [SerializeField]
+    protected float _futureHp;
+    [SerializeField]
+    protected float _hp;
+    [SerializeField]
+    protected float _moveSpeed;
 
-    public float hp;
-    public float futureHp;
-    public int attackDmg = 1;
-    public float attackRate = 1f;
-    private float nextAttack = 0; 
-    public float moveSpeed = 5f;
+    public abstract float hp { get; set; }
+    public abstract float futureHp { get; set; }
+    public abstract float attackDmg { get; set; }
+    public abstract float attackRate { get; set; }
+    public abstract float moveSpeed { get; set; }
+    public abstract float damageReduction { get; set; }
+
+    protected int currentWaveLevel;
+    protected float nextAttack = 0;
 
     //IDamage
     public float damage
@@ -26,7 +43,6 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     public float health
     {
         get { return hp; } //Read enemy hp
-        set { hp = value; } //Set enenmy base spawming hp. //TODO{Overwride in subclasses}
     }
 
     //IHealth - future health, used to prevent overkill
@@ -37,9 +53,22 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     }
     #endregion initialization
 
-    // Use this for initialization
-    private void Start ()
+    //Abstrat methods
+    protected abstract int CalculateHp(int wave);
+    protected abstract float CalcuLateDamage(int wave);
+
+    protected virtual void Update()
     {
+
+    }
+
+    // Use this for initialization
+    protected virtual void Start ()
+    {
+        //Store current wavelevel
+        WaveLevel = (IWaveLevel)GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<SpawnController>();
+        currentWaveLevel = WaveLevel.waveLevel;
+
         // Find tower object
         Tower = GameObject.FindGameObjectWithTag("Tower");
         // If it exist make sure the creeps move along the ground.
@@ -54,11 +83,10 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
         {
             Destroy(gameObject);
         }
-        
     }
 
-	// Update is called once per frame
-	private void FixedUpdate ()
+    // Update is called once per frame
+    protected void FixedUpdate ()
     {
         // if we haven't reached tower - keep moving
         if (!stop)
@@ -67,9 +95,8 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
         }
 	}
 
-
     //Take damage from bullet
-    private void TakeDamage(float damage)
+    protected void TakeDamage(float damage)
     {
         StartCoroutine(ChangeEnemyColorOnHit());
         hp -= damage;
@@ -81,13 +108,13 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     }
 
     // Move the creep towards the tower in real time
-    private void Move()
+    protected virtual void Move()
     {
         transform.position = Vector3.MoveTowards(transform.position, towerPos, moveSpeed * Time.deltaTime);
     }
 
     // Stop creep when hitting tower
-    private void OnTriggerEnter(Collider co)
+    protected void OnTriggerEnter(Collider co)
     {
         if(co.name == "Tower")
         {
@@ -109,6 +136,7 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
             }         
         }
     }
+
 
     //Shortly change color on enemy when hit.
     #region

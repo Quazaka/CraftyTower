@@ -2,75 +2,69 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnController : MonoBehaviour {
+
+public class SpawnController : MonoBehaviour, IWaveLevel {
    
-    private GameObject[] spawns;    
+    private GameObject[] spawns;
+    private Vector3 normalEnemyHeight;
+    private Vector3 fastEnemyHeight;
 
-    private Vector3 enemyHeight;
+    public GameObject normalEnemyPrefab;
+    public GameObject fastEnemyPrefab;
 
-    public GameObject enemyPrefab;
-
-    //enemy hp placeholder //TODO Retrive hp from calcEnemyHP()
-    private float hp = 10;
+    private int waveLevel = 1;
 
     //Unit spawn rate
-    public float spawnRate = 1.0f; // wait one second before spawning next unit
-    public float spawnRateModifier = 1.1f; // make units spawn 10% faster each wave
+    public float spawnRate = 0.5f; // wait spawnRate second before spawning next unit
 
     // Wave timers
-    private float waveTime = 10; // 10 second wave
-    private float waveWait = 5; // wait 5 seconds before starting new wave    
+    private float waveTime = 20; // waveTime second wave
+    private float waveWait = 5; // wait waveWait seconds before starting new wave    
 
-	// Use this for initialization
-	void Start ()
+    int IWaveLevel.waveLevel{ get{ return waveLevel; } }
+
+    // Use this for initialization
+    void Start ()
     {        
         // Fill spawn array and get enemy height.
         spawns = GameObject.FindGameObjectsWithTag("Spawn");
-        enemyHeight = new Vector3(0, enemyPrefab.transform.localScale.y, 0);
-        
+        normalEnemyHeight = new Vector3(0, normalEnemyPrefab.transform.localScale.y, 0);
+        fastEnemyHeight = new Vector3(0, fastEnemyPrefab.transform.localScale.y, 0);
+
+
         StartCoroutine(StartNextWave());
 	}
-
-    void Update()
-    {
-
-    }
 
     IEnumerator StartNextWave()
     {        
         while (true)
-        {   
+        {
             // Resetting time passed when starting new wave         
             float timePassed = 0;
             float waveStart = Time.time;
 
-            Debug.Log("Starting new wave");
+            Debug.Log("Starting new wave: " + waveLevel);
 
             while (timePassed < waveTime)
             {
-                SpawnNext();
+                SpawnNext(RetrunRandomPrefab(normalEnemyPrefab, fastEnemyPrefab));
 
                 // calculate time passed from start of wave;
                 timePassed = Time.time - waveStart;
 
                 yield return new WaitForSeconds(spawnRate);
             }
-
-            // modifying spawnrate after each wave, lowest spawnrate is 10 creeps per second.
-            // TODO make a function that modifies health, movespeed, damage etc using the interface.
-            if (spawnRate > 0.1f) { spawnRate /= spawnRateModifier; }            
-
             Debug.Log("Wave over");
-
+            waveLevel++;
             yield return new WaitForSeconds(waveWait);           
         }        
     }
 
     // Spawn next unit in a random spawn
-    void SpawnNext()
+    void SpawnNext(GameObject enemySpawnPrefab)
     {        
         // Choose a random spawn for next unit
-        GameObject spawn = spawns[Random.Range(0, spawns.Length)];
+        GameObject spawn = spawns[UnityEngine.Random.Range(0, spawns.Length)];
         Vector3 spawnPos = spawn.transform.position;
 
         /* If the spawn is placed along the x-axis
@@ -80,30 +74,30 @@ public class SpawnController : MonoBehaviour {
         if (spawn.transform.position.x != 0)
         {
             float x = spawn.transform.position.x;
-            spawnPos.z = Random.Range(-x, x);
+            spawnPos.z = UnityEngine.Random.Range(-x, x);
         }
         else // spawn placed along z-axis, spawn along x-axis.
         {
             float z = spawn.transform.position.z;
-            spawnPos.x = Random.Range(-z, z);
+            spawnPos.x = UnityEngine.Random.Range(-z, z);
         }
 
         // Spawn creeps in random spawn and make them children of that spawn
-        GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnPos + (enemyHeight / 2), Quaternion.identity) as GameObject;
+        GameObject spawnedEnemy = Instantiate(enemySpawnPrefab, spawnPos + (normalEnemyHeight / 2), Quaternion.identity) as GameObject;
         spawnedEnemy.transform.parent = spawn.transform;
-
-        //Set hp using IHealth
-        IHealth enemyHealth = spawnedEnemy.GetComponent<Enemy>();
-        enemyHealth.health = calcEnemyHP();
-        enemyHealth.futureHealth = calcEnemyHP();
     }
 
-
-    //Calculate enemy base hp based on wave
-    float calcEnemyHP()
+    private GameObject RetrunRandomPrefab(GameObject p1, GameObject p2)
     {
-        return hp;
-        //TODO Implement claculations to predict enemy hp based on the wave number
-
+        int i = Random.Range(1, 3);
+        if (i == 1)
+        {
+            return p1;
+        }
+        else
+        {
+            return p2;
+        }
+        
     }
 }

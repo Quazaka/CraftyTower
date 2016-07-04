@@ -29,7 +29,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     //Detect collision with enemy
     void OnTriggerEnter(Collider co)
     {
-        if (co.GetComponent<Enemy>())
+        if (co.GetComponent<BaseEnemy>())
         {
             enemyList.Add(co.gameObject);
         }
@@ -51,7 +51,7 @@ public abstract class BaseWeapon : MonoBehaviour {
         //Remove non enemies from list
         for (int i = hitCollidersList.Count - 1; i >= 0; i--)
         {
-            if (!hitCollidersList[i].GetComponent<Enemy>())
+            if (!hitCollidersList[i].GetComponent<BaseEnemy>())
             {
                 hitCollidersList.RemoveAt(i);
             }
@@ -85,7 +85,7 @@ public abstract class BaseWeapon : MonoBehaviour {
 
                 if (isTargetNull(currentTarget)) { enemyList.Remove(currentTarget); break; }
                 //Access target futureHealth using IHealth
-                IHealth enemyHealth = currentTarget.GetComponent<Enemy>();
+                IHealth enemyHealth = currentTarget.GetComponent<BaseEnemy>();
 
                 //Prevent overkill
                 if (enemyHealth.futureHealth > 0)
@@ -136,7 +136,7 @@ public abstract class BaseWeapon : MonoBehaviour {
         //Set future health to prevent overkill
         float projectileDamage = GetProjectileDamage(projectile);
 
-        IHealth enemyHealth = currentTarget.GetComponent<Enemy>();
+        IHealth enemyHealth = currentTarget.GetComponent<BaseEnemy>();
         enemyHealth.futureHealth -= projectileDamage;
     }
 

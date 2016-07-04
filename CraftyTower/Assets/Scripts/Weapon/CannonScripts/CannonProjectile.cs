@@ -21,7 +21,7 @@ public class CannonProjectile : BaseProjectile
     //When cannon projectile collide with enemy
     protected override void OnTriggerEnter(Collider co)
     {
-        if (co.GetComponent<Enemy>())
+        if (co.GetComponent<BaseEnemy>())
         {
             DealAOEDamage2(AOERadius, transform.position);
         }
@@ -34,11 +34,11 @@ public class CannonProjectile : BaseProjectile
         int i = 0;
         while (i < hitColliders.Length)
         {
-            if (hitColliders[i].GetComponent<Enemy>())
+            if (hitColliders[i].GetComponent<BaseEnemy>())
             {
                 if (hitColliders[i] != null)
                 {
-                    enemy = (IDamage)hitColliders[i].GetComponent<Enemy>();
+                    enemy = (IDamage)hitColliders[i].GetComponent<BaseEnemy>();
                     enemy.damage = damage;
                     Destroy(gameObject);
                 }
