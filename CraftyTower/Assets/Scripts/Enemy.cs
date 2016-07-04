@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour, IDamage, IHealth {
     // Move the creep towards the tower in real time
     private void Move()
     {
-        this.transform.position = Vector3.MoveTowards(this.transform.position, towerPos, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, towerPos, moveSpeed * Time.deltaTime);
     }
 
     // Stop creep when hitting tower

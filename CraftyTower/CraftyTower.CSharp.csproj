@@ -66,7 +66,8 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\Scripts\SpawnController.cs" />
-    <Compile Include="Assets\Scripts\Tower.cs" />
+    <Compile Include="Assets\Scripts\Tower\Death.cs" />
+    <Compile Include="Assets\Scripts\Tower\Tower.cs" />
     <Compile Include="Assets\Scripts\UI\ToggleBtn.cs" />
     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />

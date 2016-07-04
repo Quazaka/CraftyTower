@@ -22,7 +22,6 @@ public class Tower : MonoBehaviour, IDamage {
     {        
         currentHealth = startingHealth;
         setHealthText();
-
     }
 
     // Update is called once per frame

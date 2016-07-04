@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SpawnController : MonoBehaviour {
-
-    private GameObject Tower;
+   
     private GameObject[] spawns;    
 
     private Vector3 enemyHeight;
-    private bool gameOver;
 
     public GameObject enemyPrefab;
 
@@ -24,9 +22,8 @@ public class SpawnController : MonoBehaviour {
     private float waveWait = 5; // wait 5 seconds before starting new wave    
 
 	// Use this for initialization
-	void Start () {
-        Tower = GameObject.FindGameObjectWithTag("Tower");
-
+	void Start ()
+    {        
         // Fill spawn array and get enemy height.
         spawns = GameObject.FindGameObjectsWithTag("Spawn");
         enemyHeight = new Vector3(0, enemyPrefab.transform.localScale.y, 0);
@@ -36,11 +33,7 @@ public class SpawnController : MonoBehaviour {
 
     void Update()
     {
-        // When tower is dead destroy all creeps - bool to prevent looping
-        if (Tower == null && !gameOver)
-        {
-            KillAllCreeps();
-        }
+
     }
 
     IEnumerator StartNextWave()
@@ -53,7 +46,7 @@ public class SpawnController : MonoBehaviour {
 
             Debug.Log("Starting new wave");
 
-            while (timePassed < waveTime && !gameOver)
+            while (timePassed < waveTime)
             {
                 SpawnNext();
 
@@ -112,16 +105,5 @@ public class SpawnController : MonoBehaviour {
         return hp;
         //TODO Implement claculations to predict enemy hp based on the wave number
 
-    }
-    void KillAllCreeps()
-    {
-        gameOver = true;
-
-        // For each spawn, destroy all it's children
-        foreach (GameObject spawn in spawns)
-        {
-            Transform child = spawn.GetComponentInChildren<Transform>();
-            Destroy(child.gameObject);
-        }        
     }
 }
