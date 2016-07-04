@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
-public class SpawnController : MonoBehaviour, IWaveLevel {
+public class SpawnController : MonoBehaviour, IWaveLevel, IGameOver {
    
     private GameObject[] spawns;
     private Vector3 normalEnemyHeight;
@@ -14,6 +13,9 @@ public class SpawnController : MonoBehaviour, IWaveLevel {
 
     private int waveLevel = 1;
 
+    // GameOver bool
+    private bool _isGameOver;
+
     //Unit spawn rate
     public float spawnRate = 0.5f; // wait spawnRate second before spawning next unit
 
@@ -23,6 +25,13 @@ public class SpawnController : MonoBehaviour, IWaveLevel {
 
     int IWaveLevel.waveLevel{ get{ return waveLevel; } }
 
+    public bool isGameOver
+    {
+        get { return _isGameOver; }
+        set { _isGameOver = value; }
+    }
+
+
     // Use this for initialization
     void Start ()
     {        
@@ -31,21 +40,20 @@ public class SpawnController : MonoBehaviour, IWaveLevel {
         normalEnemyHeight = new Vector3(0, normalEnemyPrefab.transform.localScale.y, 0);
         fastEnemyHeight = new Vector3(0, fastEnemyPrefab.transform.localScale.y, 0);
 
-
         StartCoroutine(StartNextWave());
 	}
 
     IEnumerator StartNextWave()
     {        
-        while (true)
-        {
+        while (!_isGameOver)
+        {   
             // Resetting time passed when starting new wave         
             float timePassed = 0;
             float waveStart = Time.time;
 
             Debug.Log("Starting new wave: " + waveLevel);
 
-            while (timePassed < waveTime)
+            while (timePassed < waveTime && !_isGameOver)
             {
                 SpawnNext(RetrunRandomPrefab(normalEnemyPrefab, fastEnemyPrefab));
 

@@ -63,4 +63,12 @@ public interface IWaveEnemyType
 }
 #endregion
 
+public interface IGameOver
+{
+    bool isGameOver
+    {
+        get;
+        set;
+    }
+}
 
