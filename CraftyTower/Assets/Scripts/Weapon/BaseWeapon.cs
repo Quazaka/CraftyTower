@@ -11,7 +11,10 @@ public abstract class BaseWeapon : MonoBehaviour {
     public List<GameObject> enemyList = new List<GameObject>();
 
     //Caseswith to choose targeting type
-    private int targetSwitch = 1;
+    protected int targetSwitch = 1;
+
+    //Current Target
+    protected GameObject currentTarget;
 
     public abstract float cooldown { get; }
     public abstract float range { get; }
@@ -81,7 +84,7 @@ public abstract class BaseWeapon : MonoBehaviour {
             {
                 //Targeting script
                 Targeting scriptTargetinng = GetComponent<Targeting>();
-                GameObject currentTarget = scriptTargetinng.ChooseTargetScanType(enemyList, targetSwitch);
+                currentTarget = scriptTargetinng.ChooseTargetScanType(enemyList, targetSwitch);
 
                 if (isTargetNull(currentTarget)) { enemyList.Remove(currentTarget); break; }
                 //Access target futureHealth using IHealth
@@ -120,17 +123,13 @@ public abstract class BaseWeapon : MonoBehaviour {
     }
 
     //Arrow implementation of shoot
-    protected void Shoot(GameObject currentTarget)
+    protected virtual void Shoot(GameObject currentTarget)
     {
+        //Remove null targets from enemyList
         RemoveNullObjectFromList(enemyList);
 
+        //Create projectile and set it's target
         GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
-
-        if (currentTarget == null)
-        {
-            RemoveNullObjectFromList(enemyList); //Remove null objects from target list
-            return;
-        }
         projectile = setTarget(projectile, currentTarget);
 
         //Set future health to prevent overkill
