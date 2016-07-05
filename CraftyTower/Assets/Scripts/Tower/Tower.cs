@@ -44,7 +44,9 @@ public class Tower : MonoBehaviour, IDamage {
     {
         // Lower current health based on damage input
         currentHealth -= damage;
-        
+        // Make sure we cant go below 0 health or over startinghealth.
+        Mathf.Clamp(currentHealth, 0, startingHealth);
+
         //Deactiavte towerobject if health is below zero
         if (currentHealth <= 0)
         {
@@ -67,7 +69,8 @@ public class Tower : MonoBehaviour, IDamage {
 
     // Health is shown as text on the healthbar
     private void setHealthText()
-    {
-        healthText.text = currentHealth + "/" + startingHealth;
+    {        
+        // Use round because don't want any floating points
+        healthText.text = Mathf.Round(currentHealth) + "/" + startingHealth;
     }       
 }

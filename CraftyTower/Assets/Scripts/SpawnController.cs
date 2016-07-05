@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class SpawnController : MonoBehaviour, IWaveLevel, IWaveEnemyCountLeft, IWaveEnemyType, IGameOver {
 
+    public delegate void WaveToggle();
+    public static event WaveToggle toggleWave;
+
     [SerializeField]
     public GameObject normalEnemyPrefab;
     [SerializeField]

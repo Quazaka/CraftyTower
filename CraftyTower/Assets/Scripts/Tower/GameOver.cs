@@ -12,7 +12,6 @@ public class GameOver : MonoBehaviour {
 
     public Text restartText;
     public Text gameOverText;
-    
 
     void Start()
     {
