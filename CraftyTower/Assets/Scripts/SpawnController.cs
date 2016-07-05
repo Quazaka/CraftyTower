@@ -2,28 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnController : MonoBehaviour, IWaveLevel, IGameOver {
-   
+public class SpawnController : MonoBehaviour, IWaveLevel, IWaveEnemyCountLeft, IWaveEnemyType, IGameOver {
+
+    [SerializeField]
+    public GameObject normalEnemyPrefab;
+    [SerializeField]
+    public GameObject fastEnemyPrefab;
+    [SerializeField]
+    public GameObject bossEnemyPrefab;
+
     private GameObject[] spawns;
     private Vector3 normalEnemyHeight;
     private Vector3 fastEnemyHeight;
+    private Vector3 bossEnemyHeight;
 
-    public GameObject normalEnemyPrefab;
-    public GameObject fastEnemyPrefab;
-
-    private int waveLevel = 1;
+    private int waveLevel;
 
     // GameOver bool
     private bool _isGameOver;
+    [SerializeField]
+    private float spawnRate; 
+    private float waveTime; 
+    private float waveWait;
+    [SerializeField]
+    private int aliveEnemies;
+    private string enemyType;
+    [SerializeField]
+    private int enemiesLeftToSpawn;
 
-    //Unit spawn rate
-    public float spawnRate = 0.5f; // wait spawnRate second before spawning next unit
-
-    // Wave timers
-    private float waveTime = 20; // waveTime second wave
-    private float waveWait = 5; // wait waveWait seconds before starting new wave    
-
+    //Interface implenementations
     int IWaveLevel.waveLevel{ get{ return waveLevel; } }
+    int IWaveEnemyCountLeft.WaveEnemyCountLeft { get { return aliveEnemies; } }
+    string IWaveEnemyType.WaveEnemyType { get { return enemyType; } }  
 
     public bool isGameOver
     {
@@ -34,49 +44,123 @@ public class SpawnController : MonoBehaviour, IWaveLevel, IGameOver {
 
     // Use this for initialization
     void Start ()
-    {        
-        // Fill spawn array and get enemy height.
-        spawns = GameObject.FindGameObjectsWithTag("Spawn");
-        normalEnemyHeight = new Vector3(0, normalEnemyPrefab.transform.localScale.y, 0);
-        fastEnemyHeight = new Vector3(0, fastEnemyPrefab.transform.localScale.y, 0);
+    {
+        Initialize();
+        FillSpawnArray();
+        StartCoroutine(CheckEnemiesLeft());
+    }
 
+
+    //Initialize constants 
+    private void Initialize()
+    {
+        waveTime = 20; // waveTime second wave
+        waveWait = 5; // wait waveWait seconds before starting new wave  
+        spawnRate = 0.5f; // wait spawnRate second before spawning next unit
+        waveLevel = 1; // current wave level
+        aliveEnemies = 0; // current number of living enemies
+        enemyType = "Normal"; // current enemy type
+        enemiesLeftToSpawn = 0;
+    }
+
+    // Fill spawn array and get enemy height.
+    private void FillSpawnArray()
+    {
+        spawns = GameObject.FindGameObjectsWithTag("Spawn");
         StartCoroutine(StartNextWave());
-	}
+    }
 
     IEnumerator StartNextWave()
-    {        
-        while (!_isGameOver)
-        {   
-            // Resetting time passed when starting new wave         
-            float timePassed = 0;
-            float waveStart = Time.time;
-
-            Debug.Log("Starting new wave: " + waveLevel);
-
-            while (timePassed < waveTime && !_isGameOver)
+    {
+        while (true)
+        {
+            while (!_isGameOver && aliveEnemies == 0)
             {
-                SpawnNext(RetrunRandomPrefab(normalEnemyPrefab, fastEnemyPrefab));
+                // Resetting time passed when starting new wave         
+                float timePassed = 0;
+                float waveStart = Time.time;
+                GameObject enemyPrefab = DecideEnemyType();
 
-                // calculate time passed from start of wave;
-                timePassed = Time.time - waveStart;
+                Debug.Log("Starting new wave: " + waveLevel);
+                while (timePassed < waveTime && !_isGameOver && enemiesLeftToSpawn != 0)
+                {
+                    enemiesLeftToSpawn--;
 
-                yield return new WaitForSeconds(spawnRate);
+                    //Find place to spawn unit and spawn it there
+                    FindPositionAndSpawn(enemyPrefab);
+
+                    // calculate time passed from start of wave;
+                    timePassed = Time.time - waveStart;
+
+                    yield return new WaitForSeconds(spawnRate);
+                }
+                Debug.Log("Wave over");
+                waveLevel++;
+                yield return new WaitForSeconds(waveWait);
             }
-            Debug.Log("Wave over");
-            waveLevel++;
-            yield return new WaitForSeconds(waveWait);           
-        }        
+            yield return new WaitForSeconds(1);
+        }
     }
 
     // Spawn next unit in a random spawn
-    void SpawnNext(GameObject enemySpawnPrefab)
-    {        
-        // Choose a random spawn for next unit
+    void FindPositionAndSpawn(GameObject enemyPrefab)
+    {
+         // Choose a random spawn for next unit
         GameObject spawn = spawns[UnityEngine.Random.Range(0, spawns.Length)];
         Vector3 spawnPos = spawn.transform.position;
 
+        spawnPos = GetRandomPosition(spawn, spawnPos);
+        // Spawn creeps in random spawn and make them children of that spawn
+        SpawnEnemy(spawn, spawnPos, enemyPrefab);
+    }
+
+    //Deside what type of enemy, how many and how fast to spawn them based on wave level
+    private GameObject DecideEnemyType()
+    {
+        GameObject enemyPrefab;
+
+        if ((float)(waveLevel % 10) == 0)
+        {
+            enemyPrefab = bossEnemyPrefab;
+            enemyType = "Boss";
+            enemiesLeftToSpawn = 1;
+
+            spawnRate = (waveTime / enemiesLeftToSpawn); // Ensure every monster will spawn whitin waveTime secounds.
+        }
+        else if (waveLevel % 3 == 0)
+        {
+            enemyPrefab = fastEnemyPrefab;
+            enemyType = "Fast";
+            enemiesLeftToSpawn = 40;
+
+            spawnRate = (waveTime / enemiesLeftToSpawn);
+        }
+        else
+        {
+            enemyPrefab = normalEnemyPrefab;
+            enemyType = "Normal";
+            enemiesLeftToSpawn = 20;
+
+            spawnRate = (waveTime / enemiesLeftToSpawn);
+        }
+
+        return enemyPrefab;
+    }
+
+    //Spawn the actual enemy
+    private void SpawnEnemy(GameObject spawn, Vector3 spawnPos, GameObject enemyPrefab)
+    {
+        Vector3 enemyHeight = new Vector3(0, enemyPrefab.transform.localScale.y, 0);
+
+        GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnPos + (enemyHeight / 2), Quaternion.identity) as GameObject;
+        spawnedEnemy.transform.parent = spawn.transform;
+    }
+
+    //Get random position for enemy to spawn
+    private Vector3 GetRandomPosition(GameObject spawn, Vector3 spawnPos)
+    {
         /* If the spawn is placed along the x-axis
-            place the unit randomly along the z-axis */
+        place the unit randomly along the z-axis */
 
         //TODO fix this, kinda hacky and only works if spawns are moved along either the x or z-axis, not both.
         if (spawn.transform.position.x != 0)
@@ -89,23 +173,18 @@ public class SpawnController : MonoBehaviour, IWaveLevel, IGameOver {
             float z = spawn.transform.position.z;
             spawnPos.x = UnityEngine.Random.Range(-z, z);
         }
-
-        // Spawn creeps in random spawn and make them children of that spawn
-        GameObject spawnedEnemy = Instantiate(enemySpawnPrefab, spawnPos + (normalEnemyHeight / 2), Quaternion.identity) as GameObject;
-        spawnedEnemy.transform.parent = spawn.transform;
+        return spawnPos;
     }
 
-    private GameObject RetrunRandomPrefab(GameObject p1, GameObject p2)
+    //Check how many enemies there are left with event
+    IEnumerator CheckEnemiesLeft()
     {
-        int i = Random.Range(1, 3);
-        if (i == 1)
+        while (true)
         {
-            return p1;
+            GameObject[] Enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            aliveEnemies = Enemies.Length;
+            yield return new WaitForSeconds(0.5f);
         }
-        else
-        {
-            return p2;
-        }
-        
+
     }
 }
