@@ -3,12 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class Tower : MonoBehaviour, IDamage {
+public class Tower : MonoBehaviour, IDamage, IExperience {
 
     public delegate void GameOver();
     public static event GameOver onGameOver;
 
+    public delegate void BaseEnemy();
+    public static event BaseEnemy OnEnemyKill;
+
     // TODO: Make the healthbar use its own script
+
+    #region Variables
 
     [SerializeField] // Have this field as private but force unity to show it in the editor
     // TODO: We should practice this and use more propteries to ensure encapsulation 
@@ -20,9 +25,30 @@ public class Tower : MonoBehaviour, IDamage {
     [SerializeField]
     private Text healthText;
 
-	// Use this for initialization
-	void Start ()
-    {        
+    private IWave Wave;
+
+    private int gold = 0; // The amount of gold to spend
+    private int currentExp = 0; // The current amount of experience earned
+    private int expToLevel = 20; // The amount of experience needed to level up
+    private int towerLevel = 1; // The level of the tower
+    private bool levelUp = false; // Did we just level up the tower?
+
+    #endregion
+
+    int IExperience.experience
+    {
+        set
+        {
+            CalculateExperience(value);
+        }
+    }
+
+
+    // Use this for initialization
+    void Start ()
+    {
+        Wave = GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<Spawner>();
+
         currentHealth = startingHealth;
         setHealthText();
     }
@@ -30,7 +56,19 @@ public class Tower : MonoBehaviour, IDamage {
     // Update is called once per frame
     void Update ()
     {
-
+        if (OnEnemyKill != null)
+        {
+            OnEnemyKill();
+            if (levelUp)
+            {
+                towerLevel++;
+                levelUp = false;
+                currentExp -= expToLevel; // if you have more exp than required is it carried over
+                expToLevel *= Wave.level; // might result in some levels requiring the same exp, depending on how much exp each enemy gives
+                // fine for now, but leave this debug just in case (lvl 1 and 2 both requires 20 exp, because level up is gotten at last creep in wave - before next wave starts)        
+                Debug.Log("Current level is:  " + towerLevel + " EXP TO NEXT LVL: " + expToLevel);
+            }
+        }
     }
 
     // From Damage interface
@@ -72,5 +110,15 @@ public class Tower : MonoBehaviour, IDamage {
     {        
         // Use round because don't want any floating points
         healthText.text = Mathf.Round(currentHealth) + "/" + startingHealth;
-    }       
+    }
+
+
+    private void CalculateExperience(float expGain)
+    {
+        currentExp += (int)(expGain * Wave.level);
+        if (currentExp >= expToLevel)
+        {
+            levelUp = true;
+        }
+    }
 }

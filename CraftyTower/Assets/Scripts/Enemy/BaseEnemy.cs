@@ -3,9 +3,10 @@ using System.Collections;
 
 public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     #region initialization
-    private IWaveLevel WaveLevel;
+    private IWave Wave;
+    private IExperience Experience;
 
-    protected GameObject Tower;
+    protected GameObject towerObj;
     private Vector3 towerPos;
     private IDamage target;
     private bool stop = false;
@@ -55,7 +56,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
 
     //Abstrat methods
     protected abstract int CalculateHp(int wave);
-    protected abstract float CalcuLateDamage(int wave);
+    protected abstract float CalculateDamage(int wave);
 
     protected virtual void Update()
     {
@@ -66,23 +67,28 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     protected virtual void Start ()
     {
         //Store current wavelevel
-        WaveLevel = (IWaveLevel)GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<SpawnController>();
-        currentWaveLevel = WaveLevel.waveLevel;
+        Wave = GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<Spawner>();
+        currentWaveLevel = Wave.level;
 
         // Find tower object
-        Tower = GameObject.FindGameObjectWithTag("Tower");
+        towerObj = GameObject.FindGameObjectWithTag("Tower");
         // If it exist make sure the creeps move along the ground.
-        if (Tower != null)
+        if (towerObj != null)
         {
-            towerPos = Tower.transform.position;
-            towerPos.y -= (Tower.transform.localScale.y / 2);
-            towerPos.y += (this.transform.localScale.y / 2);
+            // TODO: Should make a empty GameObject at tower-origin and have enemies move towards that
+            // instead of a specific part of the tower (tower y-pos is based it's height making enemies float if this isn't done)
+            towerPos = towerObj.transform.position;
+            towerPos.y -= (towerObj.transform.localScale.y / 2); // Lower the y-coords by the scale of the tower
+            towerPos.y += (this.transform.localScale.y / 2); // Increase the y-coords by the scale of the enemy-type
         }
         // if not destroy the creep
         else
         {
+            Wave.enemyCountLeft--;
             Destroy(gameObject);
         }
+
+        Experience = GameObject.FindGameObjectWithTag("Tower").GetComponent<Tower>();
     }
 
     // Update is called once per frame
@@ -100,11 +106,6 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     {
         StartCoroutine(ChangeEnemyColorOnHit());
         hp -= damage;
-
-        if (hp <= 0)
-        {
-            Destroy(gameObject);
-        }
     }
 
     // Move the creep towards the tower in real time
@@ -137,9 +138,32 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
         }
     }
 
+    #region Delegate stuff
+    void OnEnable()
+    {
+        Tower.OnEnemyKill += KillAndUpdate;
+    }
+
+    void OnDisable()
+    {
+        Tower.OnEnemyKill -= KillAndUpdate;
+    }
+
+    void KillAndUpdate()
+    {        
+        if (hp <= 0)
+        {
+            Wave.enemyCountLeft--;
+            Destroy(gameObject);
+            // Get experience when enemy is dead
+            Experience.experience = 1;
+        }
+    }
+    #endregion
+
 
     //Shortly change color on enemy when hit.
-    #region
+    #region OnHit
     IEnumerator ChangeEnemyColorOnHit()
     {
         Color normalColor = gameObject.GetComponent<Renderer>().material.color;

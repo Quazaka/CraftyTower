@@ -63,17 +63,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ParticleLulz.cs" />
     <Compile Include="Assets\Scripts\Enemy\BaseEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\BossEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\FastEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\NormalEnemy.cs" />
+    <Compile Include="Assets\Scripts\GameOver.cs" />
     <Compile Include="Assets\Scripts\Interfaces.cs" />
-    <Compile Include="Assets\Scripts\SpawnController.cs" />
-    <Compile Include="Assets\Scripts\Tower\GameOver.cs" />
+    <Compile Include="Assets\Scripts\Spawner\Spawner.cs" />
+    <Compile Include="Assets\Scripts\Spawner\SpawnerEnums.cs" />
     <Compile Include="Assets\Scripts\Tower\Tower.cs" />
-    <Compile Include="Assets\Scripts\UI\ToggleBtn.cs" />
-    <Compile Include="Assets\Scripts\UI\WaveToggle.cs" />
+    <Compile Include="Assets\Scripts\UI\HoverTextHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\MenuHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\PauseMenuScript.cs" />
     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets\Scripts\Weapon\BaseWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonWeapon.cs" />
+    <Compile Include="Assets\Scripts\Weapon\LightningScripts\LightningWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

@@ -46,7 +46,7 @@ public class WeaponChooser : MonoBehaviour
     }
 
     // Update is called once per frame
-    // TODO: When new weapons are activated, add them to the dropdown
+    // TODO: When new weapons are activated (fx. through leveling up), add them to the dropdown
     void Update()
     {
 
@@ -61,9 +61,10 @@ public class WeaponChooser : MonoBehaviour
     }
 
     // Get the GameObj of the selected option in the dropdown
-    public void SelectWeapon(Dropdown wepDrop)
+    public void SelectWeapon()
     {
-        string weaponName = wepDrop.captionText.text;
+        //Dropdown wepDrop
+        string weaponName = weaponSelector.captionText.text;
 
         // Find the weapon in the list where the name match
         selectedWeapon = weapons.Find(w => w.name == weaponName);

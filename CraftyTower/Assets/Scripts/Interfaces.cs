@@ -22,9 +22,25 @@ public interface IHealth
 }
 
 #region Wave
-public interface IWaveLevel
+public interface IWave
 {
-    int waveLevel
+    int level
+    {
+        get;
+    }
+
+    int enemyCountLeft
+    {
+        get;
+        set;
+    }
+
+    //float timeLeft
+    //{
+    //    get;
+    //}
+
+    string enemyType
     {
         get;
     }
@@ -37,31 +53,15 @@ public interface IWaveEnemyHp
         get;
     }
 }
-
-public interface IWaveEnemyCountLeft
-{
-    int WaveEnemyCountLeft
-    {
-        get;
-    }
-}
-
-public interface IWaveTimeLeft
-{
-    float WaveTimeLeft
-    {
-        get;
-    }
-}
-
-public interface IWaveEnemyType
-{
-    string WaveEnemyType
-    {
-        get;
-    }
-}
 #endregion
+
+public interface IExperience
+{
+    int experience
+    {
+        set;
+    }
+}
 
 public interface IGameOver
 {

@@ -9,7 +9,7 @@ public class FastEnemy : BaseEnemy {
 
         //Enemy stats
         _moveSpeed = 2;
-        _attackDmg = CalcuLateDamage(currentWaveLevel);
+        _attackDmg = CalculateDamage(currentWaveLevel);
         _attackRate = 1;
         _damageReduction = 0;
         _futureHp = CalculateHp(currentWaveLevel);
@@ -54,7 +54,7 @@ public class FastEnemy : BaseEnemy {
     }
 
     //Computations with CPU POWER - extrem performance.
-    protected override float CalcuLateDamage(int wave)
+    protected override float CalculateDamage(int wave)
     {
         float damage = (0.05f * wave);
         return damage;
