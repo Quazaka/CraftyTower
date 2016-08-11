@@ -79,7 +79,7 @@ public class Targeting : MonoBehaviour {
     //TargetSwitch 3
     GameObject GetRandomEnemy(List<GameObject> enemies)
     {
-        int i = Random.Range(0, enemies.Count);
+        int i = Random.Range(0, enemies.Count -1);
         return enemies[i];
     }
 

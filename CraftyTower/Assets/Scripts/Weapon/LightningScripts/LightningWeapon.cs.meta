@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: 782302c597258834e9fa1861eb1ac523
-timeCreated: 1467745082
+timeCreated: 1468007878
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - projectilePrefab: {instanceID: 0}
+  - lightningRendererPrefab: {fileID: 156522, guid: d599cf84e057ad040906bc6dcfe8712f,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

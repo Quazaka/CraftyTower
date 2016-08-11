@@ -4,10 +4,11 @@ using System.Collections;
 public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     #region initialization
     private IWaveLevel WaveLevel;
+    private IDamage target;
 
     protected GameObject Tower;
     private Vector3 towerPos;
-    private IDamage target;
+
     private bool stop = false;
 
     [SerializeField]
@@ -22,6 +23,8 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     protected float _hp;
     [SerializeField]
     protected float _moveSpeed;
+    [SerializeField]
+    protected bool _isHitByLightning;
 
     public abstract float hp { get; set; }
     public abstract float futureHp { get; set; }

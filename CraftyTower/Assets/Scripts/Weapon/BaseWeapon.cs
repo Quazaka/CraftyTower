@@ -80,11 +80,11 @@ public abstract class BaseWeapon : MonoBehaviour {
     {
         while (true)
         {
-            while (enemyList.Count > 0)
+            while (enemyList.Count > 0 && enemyList != null)
             {
                 //Targeting script
-                Targeting scriptTargetinng = GetComponent<Targeting>();
-                currentTarget = scriptTargetinng.ChooseTargetScanType(enemyList, targetSwitch);
+                Targeting scriptTargeting = GetComponent<Targeting>();
+                currentTarget = scriptTargeting.ChooseTargetScanType(enemyList, targetSwitch);
 
                 if (isTargetNull(currentTarget)) { enemyList.Remove(currentTarget); break; }
                 //Access target futureHealth using IHealth
@@ -125,6 +125,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     //Arrow implementation of shoot
     protected virtual void Shoot(GameObject currentTarget)
     {
+        Debug.Log("Shooting with the wrong method");
         //Remove null targets from enemyList
         RemoveNullObjectFromList(enemyList);
 
@@ -133,10 +134,8 @@ public abstract class BaseWeapon : MonoBehaviour {
         projectile = setTarget(projectile, currentTarget);
 
         //Set future health to prevent overkill
-        float projectileDamage = GetProjectileDamage(projectile);
-
         IHealth enemyHealth = currentTarget.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= projectileDamage;
+        enemyHealth.futureHealth -= GetProjectileDamage(projectile);
     }
 
     //Set target in subclass to ensure corret script is initialzed on projectile

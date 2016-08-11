@@ -1,18 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
-public class LightningWeapon : BaseWeapon {
-    float _damage = 1; // Hack fordi alle de andre våben er bygget med projektiler.
+public class LightningWeapon : BaseWeapon, IDamage {
+    private float _damage = 1; //private constanst as damage - in other weapon classes retrived from projectile
+    private int jumpCount = 2;
+    private float jumpDistance = 2;
+    [SerializeField]
+    private GameObject lightningRendererPrefab;
 
     public override float cooldown
     {
-        get { return 0.2f; }
+        get { return 1f; }
+    }
+
+    public float damage
+    {
+        set{ damage = _damage; }
     }
 
     public override float range
     {
-        get { return 3; }
+        get { return 10; }
     }
 
     protected override float GetProjectileDamage(GameObject projectile)
@@ -22,41 +32,28 @@ public class LightningWeapon : BaseWeapon {
 
     protected override GameObject setTarget(GameObject projectile, GameObject currentTarget)
     {
-        throw new NotImplementedException();
+        Debug.Log("This is an error - Check LightningWeapon.cs setTarget should not be called");
+        throw new NotImplementedException(); // Not to be implemented, if called it's a mistake
     }
 
     //Override shoot
     protected override void Shoot(GameObject currentTarget)
     {
+        Debug.Log("Shooting with lightnings");
         //Remove null targets from enemyList
         RemoveNullObjectFromList(enemyList);
 
-        //Create projectile and set it's target
-        GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
-        projectile = setTarget(projectile, currentTarget);
-
-        //Set future health to prevent overkill
-        float projectileDamage = GetProjectileDamage(projectile);
-
-        IHealth enemyHealth = currentTarget.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= projectileDamage;
+        //Instanciate first lightning arc
+        GameObject lightningArc = (GameObject)Instantiate(lightningRendererPrefab, transform.position, Quaternion.identity); //create first "chain" in lightning jump
+        lightningArc.GetComponent<LightningArc>().Instantiate(jumpCount,currentTarget, _damage, jumpDistance, transform.position, true, null);
+    }
+    void Awake() // This is used instead of Start(), as start is run in the baseclass.
+    {
+        targetSwitch = 2; //Random target
     }
 
-    // Use this for initialization
-    void Start () {
-        targetSwitch = 2;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        while (currentTarget != null)
-        {
-            Debug.Log("Drawing lines");
-            LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.SetVertexCount(2);
-            lineRenderer.SetWidth(0.2F, 0.2F);
-            lineRenderer.SetPosition(1, transform.position);
-            lineRenderer.SetPosition(2, currentTarget.transform.position);
-        }
+    // Update is called once per frame
+    void Update () {
+
 	}
 }

@@ -13,7 +13,7 @@ public class GameOver : MonoBehaviour {
     public Text restartText;
     public Text gameOverText;
 
-    void Start()
+    void Awake()
     {
         // Find the spawncontroller script so we can reference the isGameOver through the interface
         gameOver = GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<SpawnController>();
@@ -25,7 +25,7 @@ public class GameOver : MonoBehaviour {
 
     void Update()
     {
-        if (gameOver.isGameOver)
+        if (gameOver != null && gameOver.isGameOver)
         {
             if (Input.GetKeyDown(KeyCode.R))
             {

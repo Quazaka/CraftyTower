@@ -65,7 +65,8 @@ public class NormalEnemy : BaseEnemy {
 
     protected override int CalculateHp(int wave)
     {
-        int hp = (int)Math.Ceiling( Mathf.Pow(wave, 1.5f));
+        //TODO fjern 100 det er kun til debug
+        int hp = (int)Math.Ceiling( Mathf.Pow(wave, 1.5f)) + 100;
 
         if(hp < 1) { hp = 1; }
         return hp;
