@@ -76,7 +76,7 @@ public class Targeting : MonoBehaviour {
 
 
     //Pick a random unit in range
-    //TargetSwitch 3
+    //TargetSwitch 3 
     GameObject GetRandomEnemy(List<GameObject> enemies)
     {
         int i = Random.Range(0, enemies.Count -1);

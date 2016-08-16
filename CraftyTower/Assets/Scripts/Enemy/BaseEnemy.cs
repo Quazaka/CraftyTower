@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     #region initialization
-    private IWaveLevel WaveLevel;
+    //private IWaveLevel WaveLevel;
     private IDamage target;
     private IWave Wave;
     private IExperience Experience;

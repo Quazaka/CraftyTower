@@ -13,11 +13,14 @@ public class LightningArc : MonoBehaviour
     private List<GameObject> enemyList; //Store enemies in range
     [SerializeField]
     private GameObject lightningWeapon; //Reference to weapon
+    [SerializeField]
+    private GameObject lightningRendererPrefab; //Reference to lightningRenderePrefab
     private List<GameObject> IHaveBeenHit; //List to store enemies already hit by this chain
     private GameObject previousTarget;
     private float lifeTime; //How long should we show a lighting
     private bool firstJump; // First time istanciated?
     private bool instantiated; //Is class instanciated?
+    private bool done; //Have we peformed our attack for this chain link
 
     public void Instantiate(int jumpCountInit, GameObject currentTargetInit, float damageInit, float jumpDistanceInit, Vector3 lightningOriginInit, bool fistJumpInit, List<GameObject> IHaveBeenHitInit)
     {
@@ -29,6 +32,7 @@ public class LightningArc : MonoBehaviour
         lightningOrigin = lightningOriginInit;
         firstJump = fistJumpInit;
         lifeTime = 0.5f;
+        done = false;
 
         if (IHaveBeenHitInit != null) //If the class is initiated from weapon, this will be null, as no enemies have yet been hit
         {
@@ -45,23 +49,14 @@ public class LightningArc : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-    }
-
-    private void Update()
-    {
-        StartCoroutine(UpdateWithDelay());
-    }
-
-    IEnumerator UpdateWithDelay()
-    {
-        if (instantiated)
+        if (instantiated && !done)
         {
             if (currentTarget != null)
             {
                 DrawLightArc();
                 Object.Destroy(gameObject, lifeTime); // Value - time in seconds before lighting vanish. Lower better for performance
+                done = true;
             }
-            yield return new WaitForSeconds(lifeTime + 100f); //We only want to call this once in its lifetime
         }
     }
 
@@ -75,13 +70,14 @@ public class LightningArc : MonoBehaviour
 
         if (enemyList.Count != 0)
         {
+            Debug.Log(currentTarget);
             currentTarget = SetNextTarget(enemyList); // Set random target in range if there any whitin range
+            Debug.Log(currentTarget);
+            if (currentTarget != null) // if SetNextTarget found a target
+            {
+                JumpAgain(); // If more jumps are to be peformed, jump
+            }
         }
-        if (currentTarget != null) // if SetNextTarget found a target
-        {
-            JumpAgain(); // If more jumps are to be peformed, jump
-        }
-
     }
 
     private void DrawArc()
@@ -99,8 +95,8 @@ public class LightningArc : MonoBehaviour
             var pos = Vector3.Lerp(lightningOrigin, currentTarget.transform.position, i / (float)vertexCount);
 
             //randomises lines position
-            pos.x += Random.Range(-0.2f, 0.2f);
-            pos.y += Random.Range(-0.2f, 0.2f);
+            pos.x += Random.Range(-0.1f, 0.1f);
+            pos.y += Random.Range(-0.1f, 0.1f);
 
             lineRenderer.GetComponent<LineRenderer>().SetPosition(i, pos);
         }
@@ -109,11 +105,18 @@ public class LightningArc : MonoBehaviour
     //Jump if there are more jumps to be done
     private void JumpAgain()
     {
+        Debug.Log(jumpCount);
         if (jumpCount > 0)
         {
             jumpCount--; //Remove one jump
+
+            GameObject lightningArc = (GameObject)Instantiate(lightningRendererPrefab, transform.position, Quaternion.identity);
+            lightningArc.GetComponent<LightningArc>().Instantiate(jumpCount, currentTarget, damage, GetJumpDistance(), previousTarget.transform.position, false, IHaveBeenHit);
+
+            /*
             LightningArc lightningArc = GetComponent<LightningArc>();
             lightningArc.Instantiate(jumpCount, currentTarget, damage, GetJumpDistance(), previousTarget.transform.position, false, IHaveBeenHit);
+            */
         }
     }
 
@@ -194,4 +197,5 @@ public class LightningArc : MonoBehaviour
             return jumpDistance;
         }
     }
+
 }

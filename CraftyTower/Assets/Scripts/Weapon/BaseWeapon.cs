@@ -39,7 +39,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     }
 
     //Get enemies in range of a center
-    private List<GameObject> GetEnemisInRange(Vector3 center, float radius)
+    internal List<GameObject> GetEnemisInRange(Vector3 center, float radius)
     {
         //OverlapSphere returns an array - converted to list here
         Collider[] hitCollidersArray = Physics.OverlapSphere(center, radius);
@@ -93,7 +93,7 @@ public abstract class BaseWeapon : MonoBehaviour {
                 //Prevent overkill
                 if (enemyHealth.futureHealth > 0)
                 {
-                    Shoot(currentTarget);
+                    Shoot(currentTarget); // shoot
                 }
                 else
                 {
@@ -125,7 +125,6 @@ public abstract class BaseWeapon : MonoBehaviour {
     //Arrow implementation of shoot
     protected virtual void Shoot(GameObject currentTarget)
     {
-        Debug.Log("Shooting with the wrong method");
         //Remove null targets from enemyList
         RemoveNullObjectFromList(enemyList);
 
