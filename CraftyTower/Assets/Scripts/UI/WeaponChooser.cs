@@ -14,6 +14,9 @@ public class WeaponChooser : MonoBehaviour
     [SerializeField]
     private Dropdown weaponSelector;
 
+    [SerializeField]
+    private TowerCube towerCubePrefab;
+
     private Vector3 towerPos;
 
     // TODO: Make it such that list is only filled with weapons possible to create (e.g. some are unlocked after clearing wave XX)
@@ -43,6 +46,7 @@ public class WeaponChooser : MonoBehaviour
 
         // Get the position of the tower
         towerPos = GameObject.FindGameObjectWithTag("Tower").transform.position;
+        towerPos.y += 10f;
     }
 
     // Update is called once per frame
@@ -55,8 +59,14 @@ public class WeaponChooser : MonoBehaviour
     #region Weapon Selection/Creation
     // Weapon instantiate
     public void CreateWeapon()
-    {
-        Instantiate(selectedWeapon, towerPos, Quaternion.identity);
+    {       
+        Transform Tc = Instantiate(towerCubePrefab.transform, towerPos, Quaternion.identity) as Transform;
+        GameObject towerParent = GameObject.FindGameObjectWithTag("Tower");
+        Tc.parent = towerParent.transform;
+
+        GameObject curWep =  Instantiate(selectedWeapon, towerPos, Quaternion.identity) as GameObject;
+        curWep.transform.parent = Tc;
+
         Debug.Log("Created " + selectedWeapon.name);
     }
 

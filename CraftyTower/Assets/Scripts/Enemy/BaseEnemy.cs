@@ -160,7 +160,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
             Wave.enemyCountLeft--;
             Destroy(gameObject);
             // Get experience when enemy is dead
-            Experience.experience = 1;
+            //Experience.experience = 1;
         }
     }
     #endregion
