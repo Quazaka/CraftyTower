@@ -6,11 +6,15 @@ using System.Linq;
 
 public class LightningWeapon : BaseWeapon, IDamage {
     private float _damage = 1; //private constanst as damage - in other weapon classes retrived from projectile
+    private float _tempDamage; // Store damage during jumps
+    private float damageLossPerJump = 0.9f; // 0.9f = 10% damage loss
     private int jumpCount = 2; //Number of jumps
-    private float jumpDistance = 10; //Jump Distance
+    private float jumpDistance = 3; //Jump Distance
     private List<GameObject> IHaveBeenHit = new List<GameObject>(); //List to store enemies already hit by this chain jump
     private List<GameObject> jumpEnemyList = new List<GameObject>(); //List to store enemies that can be jumped to
-    private float lifetime = 0.1f;
+    private float lifetime = 0.1f; // How long the arch should be displayed
+    public GameObject towerCubeObj;
+
 
     public override float cooldown
     {
@@ -24,7 +28,7 @@ public class LightningWeapon : BaseWeapon, IDamage {
 
     public override float range
     {
-        get { return 10; }
+        get { return 7; }
     }
 
     protected override float GetProjectileDamage(GameObject projectile)
@@ -52,6 +56,12 @@ public class LightningWeapon : BaseWeapon, IDamage {
     void Awake() // This is used instead of Start(), as start runs in the baseclass.
     {
         targetSwitch = 1; //Closest target
+ 
+    }
+
+    void Update()
+    {
+        gameObject.transform.position = towerCubeObj.transform.position;
     }
 
     private void LightningAttack(GameObject target, int noJumps)
@@ -70,15 +80,26 @@ public class LightningWeapon : BaseWeapon, IDamage {
         }
         CreateLightningArc(targetList); // Create a lightningArc effect from previous target to the next target and apply damage.
         IHaveBeenHit.Clear(); //Clear IHaveBeenHit so the next chain can use it.
+        _tempDamage = _damage; //Set _tempDamage to euqal _damage so each chain does equal damage.
 
     }
 
     private void CreateLightningArc(List<GameObject> targetList)
     {
         DrawArc(targetList); // Draw arch
+        int i = 0;
+
         foreach (GameObject target in targetList)
         {
-            DealDamage(target); // Deal damage
+            if (i == 0) // if first target dont reduce damage.
+            {
+                DealDamage(target, _tempDamage); // Deal damage
+            } else
+            {
+                _tempDamage = _tempDamage * damageLossPerJump;
+                DealDamage(target, _tempDamage); // Deal damage with damage reduction
+            }
+            i++;
         }
     }
 
@@ -100,18 +121,19 @@ public class LightningWeapon : BaseWeapon, IDamage {
             i++;
         }
 
-        Co_DisableLineRendereAfterDelay(lineRenderer, lifetime, vertexCount);
+        StartCoroutine(Co_DisableLineRendereAfterDelay(lineRenderer, lifetime, vertexCount));
     }
 
-    private void DealDamage(GameObject Target)
+    private void DealDamage(GameObject Target, float damage)
     {
+        //Debug.Log("Dealing " + damage + " points of damage");
         //Set future health to prevent overkill
         IHealth enemyHealth = (IHealth)Target.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= _damage;
+        enemyHealth.futureHealth -= damage;
 
         //Damage target instantly
         IDamage enemyDealDamage = (IDamage)Target.GetComponent<BaseEnemy>();
-        enemyDealDamage.damage = _damage;
+        enemyDealDamage.damage = damage;
     }
 
    
@@ -128,12 +150,12 @@ public class LightningWeapon : BaseWeapon, IDamage {
 
     IEnumerator Co_DisableLineRendereAfterDelay(LineRenderer linerenderer, float lifetime, int vertexCount)
     {
+        yield return new WaitForSeconds(lifetime);
+
         for (int i = 0; i < vertexCount; i++)
         {
             linerenderer.GetComponent<LineRenderer>().SetPosition(i, Vector3.zero);
         }
-        
-        yield return new WaitForSeconds(lifetime);
     }
 }
 

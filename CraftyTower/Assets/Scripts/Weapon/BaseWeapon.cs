@@ -25,10 +25,6 @@ public abstract class BaseWeapon : MonoBehaviour {
         StartCoroutine(Co_UpdateEnemyList());
     }
 
-    void Update () {
-
-    }
-
     //Detect collision with enemy
     void OnTriggerEnter(Collider co)
     {

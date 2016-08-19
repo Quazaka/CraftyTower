@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Resources\LightningBolt\LightningBoltScript.cs" />
     <Compile Include="Assets\Scripts\Enemy\BaseEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\BossEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\FastEnemy.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Assets\Scripts\Spawner\Spawner.cs" />
     <Compile Include="Assets\Scripts\Spawner\SpawnerEnums.cs" />
     <Compile Include="Assets\Scripts\Tower\Tower.cs" />
+    <Compile Include="Assets\Scripts\Tower\TowerCube.cs" />
     <Compile Include="Assets\Scripts\UI\HoverTextHandler.cs" />
     <Compile Include="Assets\Scripts\UI\MenuHandler.cs" />
     <Compile Include="Assets\Scripts\UI\PauseMenuScript.cs" />
@@ -82,9 +84,11 @@
     <Compile Include="Assets\Scripts\Weapon\BaseWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonWeapon.cs" />
-    <Compile Include="Assets\Scripts\Weapon\LightningScripts\LightningArc.cs" />
     <Compile Include="Assets\Scripts\Weapon\LightningScripts\LightningWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Resources\LightningBolt\Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
