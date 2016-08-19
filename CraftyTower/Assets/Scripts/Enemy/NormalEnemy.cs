@@ -10,7 +10,7 @@ public class NormalEnemy : BaseEnemy {
 
         //Enemy stats
         _moveSpeed = 1;
-        _attackDmg = CalculateDamage(currentWaveLevel);
+        _attackDmg = 10; //CalculateDamage(currentWaveLevel);
         _attackRate = 1;
         _damageReduction = 0;
         _futureHp = CalculateHp(currentWaveLevel);
