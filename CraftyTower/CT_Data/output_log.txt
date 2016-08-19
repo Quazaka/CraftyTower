@@ -14,14 +14,14 @@ Platform assembly: F:\Documents\GitHub\CraftyTower\CraftyTower\CT_Data\Managed\U
 Loading F:\Documents\GitHub\CraftyTower\CraftyTower\CT_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: F:\Documents\GitHub\CraftyTower\CraftyTower\CT_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading F:\Documents\GitHub\CraftyTower\CraftyTower\CT_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.148 seconds
+- Completed reload, in  0.140 seconds
 Platform assembly: F:\Documents\GitHub\CraftyTower\CraftyTower\CT_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: F:\Documents\GitHub\CraftyTower\CraftyTower\CT_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.610297 ms
+UnloadTime: 0.608963 ms
 MainMenu is active
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -31,8 +31,16 @@ Started wave: 1. Normal enemies incoming
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: a80 -> priority: 1 
-  Thread -> id: 17fc -> priority: 1 
+  Thread -> id: 23e0 -> priority: 1 
+  Thread -> id: cf0 -> priority: 1 
+PauseMenu is active
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+MainMenu is active
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
 TowerMenu is active
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -41,19 +49,7 @@ MainMenu is active
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-PauseMenu is active
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-MainMenu is active
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-PauseMenu is active
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-MainMenu is active
+Shooting with lightnings
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
@@ -89,11 +85,39 @@ Shooting with lightnings
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-PauseMenu is active
+Shooting with lightnings
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-we quit
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Shooting with lightnings
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
