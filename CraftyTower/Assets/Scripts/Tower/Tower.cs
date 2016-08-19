@@ -90,6 +90,7 @@ public class Tower : MonoBehaviour, IDamage, IExperience {
         {
             if (onGameOver != null)
             {
+                Debug.Log("Dead");
                 onGameOver();
             }
         }

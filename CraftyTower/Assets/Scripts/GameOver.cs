@@ -73,7 +73,10 @@ public class GameOver : MonoBehaviour {
     
     void SetGameOverText()
     {
+        gameOverText.enabled = true;
+        restartText.enabled = true;
+
         gameOverText.text = "GAME OVER";
-        restartText.text = "Press 'R' to restart";        
+        restartText.text = "Press 'R' to restart";
     }        
 }

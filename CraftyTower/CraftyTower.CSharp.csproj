@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\CraftingGrid.cs" />
     <Compile Include="Assets\Scripts\Enemy\BaseEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\BossEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\FastEnemy.cs" />
@@ -72,9 +73,7 @@
     <Compile Include="Assets\Scripts\Spawner\Spawner.cs" />
     <Compile Include="Assets\Scripts\Spawner\SpawnerEnums.cs" />
     <Compile Include="Assets\Scripts\Tower\Tower.cs" />
-    <Compile Include="Assets\Scripts\UI\HoverTextHandler.cs" />
     <Compile Include="Assets\Scripts\UI\MenuHandler.cs" />
-    <Compile Include="Assets\Scripts\UI\PauseMenuScript.cs" />
     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />
