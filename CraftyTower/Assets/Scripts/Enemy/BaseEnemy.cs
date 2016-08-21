@@ -121,7 +121,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     // Stop creep when hitting tower
     protected void OnTriggerEnter(Collider co)
     {
-        if(co.name == "Tower")
+        if(co.name == "BaseBlock")
         {
             stop = true;            
         }
@@ -131,7 +131,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     private void OnTriggerStay(Collider co)
     {
         // Attack tower
-        if (co.name == "Tower")
+        if (co.name == "BaseBlock")
         {          
             target = co.GetComponent<Tower>();
             if (Time.time > nextAttack)

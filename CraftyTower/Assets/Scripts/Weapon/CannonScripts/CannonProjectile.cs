@@ -6,16 +6,33 @@ public class CannonProjectile : BaseProjectile
     protected IDamage enemy;
 
     //Splash radius
-    private float AOERadius = 2.0f;
+    private float _SplashRadius;
 
-    public override float damage
+    private float _damage;
+    private float _splashDamage;
+
+    public override float Damage
+    {
+        get { return _damage; }
+        set { _damage = value; }
+
+    }
+
+    public override float Speed
     {
         get { return 5.0f; }
     }
 
-    public override float speed
+    public float SplashRadius
     {
-        get { return 5.0f; }
+        get { return _SplashRadius; }
+        set { _SplashRadius = value; }
+    }
+
+    public float SplashDamage
+    {
+        get { return _splashDamage; }
+        set { _splashDamage = value; }
     }
 
     //When cannon projectile collide with enemy
@@ -23,12 +40,12 @@ public class CannonProjectile : BaseProjectile
     {
         if (co.GetComponent<BaseEnemy>())
         {
-            DealAOEDamage2(AOERadius, transform.position);
+            DealAOEDamage(_SplashRadius, transform.position);
         }
     }
 
     //Instantiate AOEDamagePrefab with AOEDamage collider
-    private void DealAOEDamage2(float radius, Vector3 center)
+    private void DealAOEDamage(float radius, Vector3 center)
     {
         Collider[] hitColliders = Physics.OverlapSphere(center, radius);
         int i = 0;
@@ -39,7 +56,7 @@ public class CannonProjectile : BaseProjectile
                 if (hitColliders[i] != null)
                 {
                     enemy = (IDamage)hitColliders[i].GetComponent<BaseEnemy>();
-                    enemy.damage = damage;
+                    enemy.damage = _damage;
                     Destroy(gameObject);
                 }
             }

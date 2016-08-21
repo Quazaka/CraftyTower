@@ -16,8 +16,9 @@ public abstract class BaseWeapon : MonoBehaviour {
     //Current Target
     protected GameObject currentTarget;
 
-    public abstract float cooldown { get; }
-    public abstract float range { get; }
+    //Firerate and range defined here as they are used in the base class
+    public abstract float Firerate { get; set; }
+    public abstract float Range { get; set; }
 
     void Start()
     {
@@ -65,7 +66,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     {
         while (true)
         {
-            enemyList = GetEnemisInRange(transform.position, range);
+            enemyList = GetEnemisInRange(transform.position, Range);
 
             yield return new WaitForSeconds(0.5f);
         }
@@ -96,7 +97,7 @@ public abstract class BaseWeapon : MonoBehaviour {
                     enemyList.Remove(currentTarget);
                     currentTarget = null;
                 }
-                yield return new WaitForSeconds(cooldown);
+                yield return new WaitForSeconds(Firerate);
             }
             yield return new WaitForSeconds(0.1f);
         }
@@ -124,17 +125,22 @@ public abstract class BaseWeapon : MonoBehaviour {
         //Remove null targets from enemyList
         RemoveNullObjectFromList(enemyList);
 
-        //Create projectile and set it's target
+        //Create projectile and set it's target and damage
         GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
+        SetProjectileDamage(projectile);
         projectile = setTarget(projectile, currentTarget);
 
         //Set future health to prevent overkill
         IHealth enemyHealth = currentTarget.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= GetProjectileDamage(projectile);
+        enemyHealth.futureHealth -= CalculateDamageWithVariables();
     }
 
     //Set target in subclass to ensure corret script is initialzed on projectile
     protected abstract GameObject setTarget(GameObject projectile, GameObject currentTarget);
 
-    protected abstract float GetProjectileDamage(GameObject projectile);
+    //Calculate actual damage in subclasses
+    protected abstract float CalculateDamageWithVariables();
+
+    //Set projectile damage in subclasses.
+    protected abstract void SetProjectileDamage(GameObject projectile);
 }

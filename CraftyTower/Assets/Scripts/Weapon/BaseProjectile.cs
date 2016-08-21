@@ -10,10 +10,11 @@ public abstract class BaseProjectile : MonoBehaviour {
     public Transform target;
 
     //Bullet damage
-    public abstract float damage { get; }
+    public abstract float Damage { get; set; }
+
 
     //Speed
-    public abstract float speed { get; }
+    public abstract float Speed { get; }
 
     // Update is called once per frame
     void FixedUpdate() {
@@ -23,7 +24,7 @@ public abstract class BaseProjectile : MonoBehaviour {
             // Fly towards and face target        
             transform.rotation = Quaternion.LookRotation(target.transform.position)* Quaternion.Euler(0, 90, 0); // 90 degrees to face enemy correctly
             Vector3 dir = target.position - transform.position;
-            GetComponent<Rigidbody>().velocity = dir.normalized * speed;
+            GetComponent<Rigidbody>().velocity = dir.normalized * Speed;
         }
         else
         {
@@ -38,7 +39,7 @@ public abstract class BaseProjectile : MonoBehaviour {
         if (co.GetComponent<BaseEnemy>())
         {
             enemyHit = (IDamage)co.GetComponent<BaseEnemy>();
-            enemyHit.damage = damage;
+            enemyHit.damage = Damage;
             Destroy(gameObject);
         }
     }

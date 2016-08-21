@@ -4,37 +4,111 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class LightningWeapon : BaseWeapon, IDamage {
-    private float _damage = 1; //private constanst as damage - in other weapon classes retrived from projectile
-    private float _tempDamage; // Store damage during jumps
-    private float damageLossPerJump = 0.9f; // 0.9f = 10% damage loss
-    private int jumpCount = 2; //Number of jumps
-    private float jumpDistance = 3; //Jump Distance
+public class LightningWeapon : BaseWeapon {
+
     private List<GameObject> IHaveBeenHit = new List<GameObject>(); //List to store enemies already hit by this chain jump
     private List<GameObject> jumpEnemyList = new List<GameObject>(); //List to store enemies that can be jumped to
     private float lifetime = 0.1f; // How long the arch should be displayed
-    public GameObject towerCubeObj;
+    private float _jumpDamage; // Store damage during jumps
+    private float _tempDamage; //Store damage with modifiers
 
+    #region Upgrades
+    [Range (0f, 100f)]
+    [SerializeField]
+    private float _damage = 1; //private constanst as damage
+    private float _firerate = 1;
+    private float _range = 5;
+    private float _JumpChance = 0; // 0 - 100
+    private float _damageLossPerJump = 0.5f; // 0.5f = 50% damage loss
+    private int _jumpCount = 1; //Number of jumps
+    private float _jumpDistance = 0.5f; //Jump Distance
+    private bool _haveRodEffect = false;
+    private float _rodDuration = 0;
+    private float _rodCooldown = 0;
+    private float _rodDamage = 0;
 
-    public override float cooldown
+    #region get/set
+
+    public float Damage
     {
-        get { return 1f; }
+        set { _damage = value; }
     }
 
-    public float damage
+    public override float Firerate
     {
-        set{ damage = _damage; }
+        get { return _firerate; }
+        set { _firerate = value; }
     }
 
-    public override float range
+    public override float Range
     {
-        get { return 7; }
+        get { return _range; }
+        set { _range = value; }
     }
 
-    protected override float GetProjectileDamage(GameObject projectile)
+    public float JumpDamage
+    {
+        get { return _jumpDamage; }
+        set { _jumpDamage = value; }
+    }
+
+    public float JumpChance
+    {
+        get{ return _JumpChance; }
+        set{ _JumpChance = value; }
+    }
+
+    public float DamageLossPerJump
+    {
+        get{ return _damageLossPerJump; }
+        set{ _damageLossPerJump = value; }
+    }
+
+    public int JumpCount
+    {
+        get{ return _jumpCount; }
+        set{ _jumpCount = value; }
+    }
+
+    public float JumpDistance
+    {
+        get{ return _jumpDistance; }
+        set{ _jumpDistance = value; }
+    }
+
+    // TODO implement Rod effect in lightning weapon.
+    public bool HaveRodEffect
+    {
+        get{ return _haveRodEffect; }
+        set{ _haveRodEffect = value; }
+    }
+
+    public float RodDuration
+    {
+        get{ return _rodDuration; }
+        set{ _rodDuration = value; }
+    }
+
+    public float RodCooldown
+    {
+        get{ return _rodCooldown; }
+        set{ _rodCooldown = value; }
+    }
+
+    public float RodDamage
+    {
+        get{ return _rodDamage; }
+        set{ _rodDamage = value; }
+    }
+    #endregion
+
+    #region upgrades
+    //Calculate damage based on variables
+    protected override float CalculateDamageWithVariables()
     {
         return _damage;
     }
+    #endregion
 
     protected override GameObject setTarget(GameObject projectile, GameObject currentTarget)
     {
@@ -50,18 +124,12 @@ public class LightningWeapon : BaseWeapon, IDamage {
         RemoveNullObjectFromList(enemyList);
 
         //Instanciate first lightning arc
-        LightningAttack(currentTarget, jumpCount);
+        LightningAttack(currentTarget, JumpCount);
 
     }
     void Awake() // This is used instead of Start(), as start runs in the baseclass.
     {
         targetSwitch = 1; //Closest target
- 
-    }
-
-    void Update()
-    {
-        gameObject.transform.position = towerCubeObj.transform.position;
     }
 
     private void LightningAttack(GameObject target, int noJumps)
@@ -70,9 +138,17 @@ public class LightningWeapon : BaseWeapon, IDamage {
         targetList.Add(target);
         IHaveBeenHit.Add(target);
 
-        //Create list with targets to deal damge and draw arch to.
-        for (int i = 0; i < noJumps; i++)
+        //If PeformJump Returns true, peform the jump with noJumps, else dont jump and just hit the first enemy.
+        int tempNoJump = noJumps;
+        if (!PeformJump())
         {
+            Debug.Log("Dont jump");
+            tempNoJump = 0;
+        }
+        for (int i = 0; i < tempNoJump; i++)
+        {
+            Debug.Log("# " + i);
+            //Create list with targets to deal damge and draw arch to.
             target = SetNextTarget(target); // Find next target in range of Target
             if(target == null) { break; }
             targetList.Add(target);
@@ -80,7 +156,7 @@ public class LightningWeapon : BaseWeapon, IDamage {
         }
         CreateLightningArc(targetList); // Create a lightningArc effect from previous target to the next target and apply damage.
         IHaveBeenHit.Clear(); //Clear IHaveBeenHit so the next chain can use it.
-        _tempDamage = _damage; //Set _tempDamage to euqal _damage so each chain does equal damage.
+        _jumpDamage = _damage; //Set _JumpDamage to euqal _damage so each chain does equal damage.
 
     }
 
@@ -93,11 +169,11 @@ public class LightningWeapon : BaseWeapon, IDamage {
         {
             if (i == 0) // if first target dont reduce damage.
             {
-                DealDamage(target, _tempDamage); // Deal damage
+                DealDamage(target, _jumpDamage); // Deal damage
             } else
             {
-                _tempDamage = _tempDamage * damageLossPerJump;
-                DealDamage(target, _tempDamage); // Deal damage with damage reduction
+                _jumpDamage = _jumpDamage * _damageLossPerJump;
+                DealDamage(target, _jumpDamage); // Deal damage with damage reduction
             }
             i++;
         }
@@ -139,7 +215,7 @@ public class LightningWeapon : BaseWeapon, IDamage {
    
     private GameObject SetNextTarget(GameObject originObj)
     {
-        jumpEnemyList = base.GetEnemisInRange(originObj.transform.position, jumpDistance); // Get all enemies in range.
+        jumpEnemyList = base.GetEnemisInRange(originObj.transform.position, _jumpDistance); // Get all enemies in range.
         jumpEnemyList.RemoveAll(i => IHaveBeenHit.Contains(i)); // Remove enemies that have been hit
 
         //Targeting script
@@ -157,5 +233,32 @@ public class LightningWeapon : BaseWeapon, IDamage {
             linerenderer.GetComponent<LineRenderer>().SetPosition(i, Vector3.zero);
         }
     }
+
+    protected override void SetProjectileDamage(GameObject projectile)
+    {
+        // not relevant in this class as LightninWeapon do not use projectiles.
+    }
+
+    private bool PeformJump()
+    {
+        bool jump = false;
+        if (_JumpChance > 100) // prevent out of range in Random below.
+        {
+            _JumpChance = 100;
+        }
+
+        //Crit
+        if (_JumpChance != 0) //If we can jump
+        {
+            int i = UnityEngine.Random.Range(0, 100);// Pick a random number from 0 to 100
+
+            if (i < _JumpChance)
+            { // if i = 0 Peform jump.
+                jump = true;
+            }
+        }
+        return jump;
+    }
+    #endregion
 }
 

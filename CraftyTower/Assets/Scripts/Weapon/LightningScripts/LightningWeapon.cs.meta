@@ -1,13 +1,12 @@
 fileFormatVersion: 2
 guid: 782302c597258834e9fa1861eb1ac523
-timeCreated: 1468007878
+timeCreated: 1471789085
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - projectilePrefab: {instanceID: 0}
-  - lightningRendererPrefab: {fileID: 156522, guid: d599cf84e057ad040906bc6dcfe8712f,
-      type: 2}
+  - towerCubeObj: {fileID: 108898, guid: df3a6ac28a98ae449bb2370847a5e74b, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
