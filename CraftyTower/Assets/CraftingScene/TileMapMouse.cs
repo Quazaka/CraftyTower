@@ -15,7 +15,6 @@ public class TileMapMouse : MonoBehaviour {
         Vector3 tempScale = new Vector3(1, 0.1f, 1);
 
         selectionCube.transform.localScale = tempScale;
-
 	}
 
 	// Update is called once per frame
@@ -30,7 +29,6 @@ public class TileMapMouse : MonoBehaviour {
             float xx = (float)(x + 0.5f);
             float zz = (float)(z + 0.5f);
 
-
             currentTileCoord.x = xx;
 			currentTileCoord.z = zz;
             currentTileCoord.y = 6.51f;
@@ -44,7 +42,7 @@ public class TileMapMouse : MonoBehaviour {
 		
 		if(Input.GetMouseButtonDown(0)) {
 
-            if (!IsQuadTaken(selectionCube.transform.position))
+            if (!IsQuadTaken(selectionCube.transform.position)) //Is quad not taken then place object
             {
                 GameObject projectile = (GameObject)Instantiate(prefab, selectionCube.transform.position, Quaternion.identity); //create projectile
                 Debug.Log("Placing upgrade");
