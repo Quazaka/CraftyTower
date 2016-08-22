@@ -1,10 +1,12 @@
 fileFormatVersion: 2
-guid: db5059b3989a3464da062eb62d791828
-timeCreated: 1471608738
+guid: 645b1eaddf708c747b96199ff3221b28
+timeCreated: 1471894422
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - selectionCube: {instanceID: 0}
+  - prefab: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

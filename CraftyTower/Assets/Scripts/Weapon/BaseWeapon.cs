@@ -128,6 +128,7 @@ public abstract class BaseWeapon : MonoBehaviour {
         //Create projectile and set it's target and damage
         GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
         SetProjectileDamage(projectile);
+        projectile.transform.parent = gameObject.transform;
         projectile = setTarget(projectile, currentTarget);
 
         //Set future health to prevent overkill
