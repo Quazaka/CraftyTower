@@ -99,6 +99,7 @@
     <Compile Include="Assets\Resources\LightningBolt\Editor\LightningBoltEditor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\FUCK.shader" />
     <None Include="Assets\Resources\LightningBolt\Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
