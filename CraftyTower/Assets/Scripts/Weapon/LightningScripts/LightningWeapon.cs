@@ -23,6 +23,7 @@ public class LightningWeapon : BaseWeapon {
     private int _jumpCount = 1; //Number of jumps
     private float _jumpDistance = 0.5f; //Jump Distance
     private bool _haveRodEffect = false;
+    private float _rodChance = 0;
     private float _rodDuration = 0;
     private float _rodCooldown = 0;
     private float _rodDamage = 0;
@@ -31,6 +32,7 @@ public class LightningWeapon : BaseWeapon {
 
     public float Damage
     {
+        get { return _damage; }
         set { _damage = value; }
     }
 
@@ -81,6 +83,12 @@ public class LightningWeapon : BaseWeapon {
     {
         get{ return _haveRodEffect; }
         set{ _haveRodEffect = value; }
+    }
+
+    public float RodChance
+    {
+        get { return _rodChance; }
+        set { _rodChance = value; }
     }
 
     public float RodDuration
