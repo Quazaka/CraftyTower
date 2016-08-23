@@ -5,20 +5,30 @@ using System.Collections.Generic;
 public class CubeDetectCollision : MonoBehaviour {
 
     private Renderer rend;
+    TileMap _tileMap;
+    DTileMap map;
+    GameObject tileMeshObj;
 
     void Start()
     {
+        tileMeshObj = GameObject.FindGameObjectWithTag("CraftingTile");
+        _tileMap = tileMeshObj.GetComponent<TileMap>();
+        map = _tileMap.map;
         rend = gameObject.GetComponent<Renderer>();
     }
 
-	// Update is called once per frame
-	void Update () {
-        if (IsQuadTaken(transform.position))
-        {
-            rend.material.color = Color.red;
-        } else
-        {
-            rend.material.color = Color.green;
+    // Update is called once per frame
+    void Update()
+    {
+        if (map != null) { 
+            if (IsQuadTaken(transform.position) || map.GetTileAt(Mathf.FloorToInt(transform.position.z), Mathf.FloorToInt(transform.position.x)) == 3)
+            {
+                rend.material.color = Color.red;
+            }
+            else
+            {
+                rend.material.color = Color.green;
+            }
         }
 	}
 

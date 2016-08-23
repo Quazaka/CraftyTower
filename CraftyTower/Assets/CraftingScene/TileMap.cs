@@ -7,25 +7,26 @@ using System.Collections;
 [RequireComponent(typeof(MeshCollider))]
 public class TileMap : MonoBehaviour {
 
-    [System.NonSerialized]
-    public int tileDim = 10;
 	const int size_x = 10;
     const int size_z = 10;
+
     [System.NonSerialized]
-    public float tileSize;
+    public float tileSize = 1;
     private Renderer material;
+
+    public Texture2D terrainTiles;
+    public int tileResolution;
+    public DTileMap map;
 
     // Use this for initialization
     void Start () {
-        material = GetComponent<Renderer>();
-        tileSize = (size_x / tileDim);
-        material.sharedMaterial.mainTextureScale = new Vector2(tileDim + 1, tileDim + 1);
+        map = new DTileMap(size_x, size_z);
         BuildMesh();
     }
 	
 	public void BuildMesh() {
 		
-		int numTiles = tileDim * tileDim;
+		int numTiles = size_x * size_z;
 		int numTris = numTiles * 2;
 		
 		int vsize_x = size_x + 1;
@@ -51,7 +52,7 @@ public class TileMap : MonoBehaviour {
 		
 		for(z=0; z < size_z; z++) {
 			for(x=0; x < size_x; x++) {
-				int squareIndex = z * tileDim + x;
+				int squareIndex = z * size_x + x;
 				int triOffset = squareIndex * 6;
 				triangles[triOffset + 0] = z * vsize_x + x + 		   0;
 				triangles[triOffset + 1] = z * vsize_x + x + vsize_x + 0;
@@ -80,5 +81,54 @@ public class TileMap : MonoBehaviour {
 		mesh_filter.mesh = mesh;
 		mesh_collider.sharedMesh = mesh;
 		Debug.Log ("Done Mesh!");
-	}
+
+        BuildTexture();
+
+    }
+
+    Color[][] ChopUpTiles()
+    {
+        int numTilesPerRow = (terrainTiles.width / tileResolution);
+        int numRows = (terrainTiles.height / tileResolution);
+
+        Color[][] tiles = new Color[numTilesPerRow * numRows][];
+
+        for (int y = 0; y < numRows; y++)
+        {
+            for (int x = 0; x < numTilesPerRow; x++)
+            {
+                tiles[y * numTilesPerRow + x] = terrainTiles.GetPixels(x * tileResolution, y * tileResolution, tileResolution, tileResolution);
+            }
+        }
+        return tiles;
+    }
+
+    void BuildTexture()
+    {
+
+
+        int texWidth = size_x * tileResolution;
+        int texHeight = size_z * tileResolution;
+        Texture2D texture = new Texture2D(texWidth, texHeight);
+
+        Color[][] tiles = ChopUpTiles();
+
+        for (int y = 0; y < size_z; y++)
+        {
+            for (int x = 0; x < size_x; x++)
+            {
+                Color[] p = tiles[map.GetTileAt(x, y)];
+                texture.SetPixels(x * tileResolution, y * tileResolution, tileResolution, tileResolution, p);
+            }
+        }
+
+        texture.filterMode = FilterMode.Point;
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.Apply();
+
+        MeshRenderer mesh_renderer = GetComponent<MeshRenderer>();
+        mesh_renderer.sharedMaterials[0].mainTexture = texture;
+
+        Debug.Log("Done Texture!");
+    }
 }
