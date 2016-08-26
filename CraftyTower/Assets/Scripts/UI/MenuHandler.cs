@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using UnityEngine.SceneManagement;
 
 public class MenuHandler : MonoBehaviour {
 
@@ -134,5 +131,11 @@ public class MenuHandler : MonoBehaviour {
     {
         Debug.Log("we quit");
         Application.Quit();
+    }
+
+    public void LoadScene(int scene)
+    {
+        Debug.Log("Changing scene");
+        SceneManager.LoadScene(scene);
     }
 }
