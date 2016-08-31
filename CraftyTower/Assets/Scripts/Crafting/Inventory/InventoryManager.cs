@@ -7,8 +7,7 @@ public class InventoryManager : MonoBehaviour {
 
     public Dictionary<string, LootDrop> inventory;
 
-    private LootDrop lootedItem;
-    private GameObject itemInInventory;
+    private LootDrop currentItem;
 
     // Use this for initialization
     void Start ()
@@ -45,16 +44,17 @@ public class InventoryManager : MonoBehaviour {
             LootDrop result = null;
 
             // if the item we click on is already in the inventory - increase its amount
-            if (inventory.TryGetValue(lootedItem.name, out result))
+            if (inventory.TryGetValue(currentItem.name, out result))
             {
-                  itemInInventory = lootedItem.gameObject;
-                  UpdateCount(true);
-                  Debug.Log("Already got " + lootedItem.name + " in inventory - count increased");
+                Destroy(currentItem.gameObject);
+                currentItem = result;
+                UpdateCount(true);
+                Debug.Log("Already got " + currentItem.name + " in inventory - count increased");
             }
             else // if not - add it
             {
                 AddItemToInventory();
-                Debug.Log(lootedItem.name + " was not in inventory - it was added");
+                Debug.Log(currentItem.name + " was not in inventory - it was added");
             }
         }        
     }
@@ -63,13 +63,10 @@ public class InventoryManager : MonoBehaviour {
     // The inventory should consist of GameObjects created in this function, (Find some way to do it).
     private void AddItemToInventory()
     {
-        LootDrop test = Instantiate(lootedItem.inventoryItemPrefab).GetComponent<LootDrop>();
-        itemInInventory = Instantiate(lootedItem.inventoryItemPrefab);
-        itemInInventory.name = lootedItem.name;
-        itemInInventory.transform.SetParent(transform, false);
-        itemInInventory.GetComponent<Image>().sprite = lootedItem.ItemSprite;
+        currentItem.transform.SetParent(transform, false);
+        currentItem.GetComponent<Image>().sprite = currentItem.ItemSprite;
 
-        inventory.Add(lootedItem.name, lootedItem);
+        inventory.Add(currentItem.name, currentItem);
         UpdateCount(true);
     }
 
@@ -79,24 +76,25 @@ public class InventoryManager : MonoBehaviour {
     {
         if (increase)
         {
-            inventory[lootedItem.name].ItemCount++;
+            inventory[currentItem.name].ItemCount++;
         }
         else
         {
-            inventory[lootedItem.name].ItemCount--;
+            inventory[currentItem.name].ItemCount--;
         }
 
         // Do something depending on how many of the item we have in the inventory
-        switch (inventory[lootedItem.name].ItemCount)
+        switch (inventory[currentItem.name].ItemCount)
         {
             case 0: // We used the last item from the inventory - remove it from inventory
-                inventory.Remove(lootedItem.name);
+                inventory.Remove(currentItem.name);
+                //Destroy(currentItem.gameObject);
                 break;
             case 1: // we only have one item - dont write it (defaults to this when looting an item not currently in inventory)
-                itemInInventory.GetComponentInChildren<Text>().text = "";
+                currentItem.GetComponentInChildren<Text>().text = "";
                 break;
             default: // show the number of items we have (we have at least one of the looted item in inventory already)
-                itemInInventory.GetComponentInChildren<Text>().text = inventory[lootedItem.name].ItemCount.ToString();
+                currentItem.GetComponentInChildren<Text>().text = inventory[currentItem.name].ItemCount.ToString();
                 break;
         }
     }
@@ -104,8 +102,8 @@ public class InventoryManager : MonoBehaviour {
     // The lootDrop script delegates to this method on its MouseUp method
     private void LootItem(LootDrop item)
     {  
-        lootedItem = item;
-        Debug.Log("Trying to loot: " + lootedItem);
+        currentItem = item;
+        Debug.Log("Trying to loot: " + currentItem);
         UpdateInventory();
     }
 }

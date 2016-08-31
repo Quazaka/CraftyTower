@@ -9,6 +9,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     GameObject itemCopy;
     InventoryManager iMan;
 
+    private Vector3 itemPos;
     private bool copyWasPlaced;
 
     void Start()
@@ -19,12 +20,15 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnBeginDrag(PointerEventData eventData)
     {
         MakeDraggableCopy();
+
+        itemPos = Camera.main.WorldToScreenPoint(itemCopy.transform.position);
     }
 
     // this is a loop
     public void OnDrag(PointerEventData eventData)
     {
-        itemCopy.transform.position = eventData.position;
+        Vector3 newScreenPoint = new Vector3(eventData.position.x, eventData.position.y, itemPos.z);
+        itemCopy.transform.position = Camera.main.ScreenToWorldPoint(newScreenPoint);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -52,9 +56,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         //itemCopy.transform.parent = this.transform.parent;
 
         // add an image component and set its sprite to be the same as the item in the inventory we selected
-        itemCopy.AddComponent(typeof(Image));
-        itemCopy.GetComponent<Image>().sprite = this.GetComponent<Image>().sprite;
+        itemCopy.AddComponent(typeof(SpriteRenderer));
+        itemCopy.GetComponent<SpriteRenderer>().sprite = this.GetComponent<Image>().sprite;
 
-        iMan.UpdateCount(false);
+        iMan.UpdateCount(false);        
     }
 }
