@@ -20,19 +20,22 @@ public class CubeDetectCollision : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (map != null) { 
-            if (IsQuadTaken(transform.position) || map.GetTileAt(Mathf.FloorToInt(transform.position.z), Mathf.FloorToInt(transform.position.x)) == 3)
+        if (map != null) {
+            if (map.GetTileAt(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.z)) == 3)
             {
+                //IsTileTaken(transform.position) || 
                 rend.material.color = Color.red;
             }
             else
             {
                 rend.material.color = Color.green;
             }
+            
         }
 	}
 
-    private bool IsQuadTaken(Vector3 center)
+
+    private bool IsTileTaken(Vector3 center)
     {
         //OverlapSphere returns an array - converted to list here
         Collider[] hitCollidersArray = Physics.OverlapSphere(center, 0.5f);
@@ -50,7 +53,6 @@ public class CubeDetectCollision : MonoBehaviour {
             if (hitCollidersList[i].GetComponent<TempScript>())
             {
                 return true;
-
             }
         }
         //Return list

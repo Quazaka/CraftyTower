@@ -10,15 +10,24 @@ public class TileMap : MonoBehaviour {
 	const int size_x = 10;
     const int size_z = 10;
 
-    [System.NonSerialized]
-    public float tileSize = 1;
-    private Renderer material;
-
+    private float tileSize = 1;
     public Texture2D terrainTiles;
-    public int tileResolution;
+    private int tileResolution = 16;
     public DTileMap map;
 
-    // Use this for initialization
+    #region Event handler
+    void OnEnable()
+    {
+        DTileMap.RebuildMesh += BuildTexture;
+    }
+
+    void OnDisable()
+    {
+        DTileMap.RebuildMesh -= BuildTexture;
+    }
+#endregion
+
+    //Set size and build mesh
     void Start () {
         map = new DTileMap(size_x, size_z);
         BuildMesh();
@@ -28,12 +37,12 @@ public class TileMap : MonoBehaviour {
 		
 		int numTiles = size_x * size_z;
 		int numTris = numTiles * 2;
-		
 		int vsize_x = size_x + 1;
 		int vsize_z = size_z + 1;
 		int numVerts = vsize_x * vsize_z;
 		
 		// Generate the mesh data
+        // Build Verts 
 		Vector3[] vertices = new Vector3[ numVerts ];
 		Vector3[] normals = new Vector3[numVerts];
 		Vector2[] uv = new Vector2[numVerts];
@@ -48,8 +57,8 @@ public class TileMap : MonoBehaviour {
 				uv[ z * vsize_x + x ] = new Vector2( (float)x / vsize_x, (float)z / vsize_z );
 			}
 		}
-		Debug.Log ("Done Verts!");
-		
+
+        //Build triangles
 		for(z=0; z < size_z; z++) {
 			for(x=0; x < size_x; x++) {
 				int squareIndex = z * size_x + x;
@@ -63,8 +72,6 @@ public class TileMap : MonoBehaviour {
 				triangles[triOffset + 5] = z * vsize_x + x + 		   1;
 			}
 		}
-		
-		Debug.Log ("Done Triangles!");
 		
 		// Create a new Mesh and populate with the data
 		Mesh mesh = new Mesh();
@@ -80,37 +87,16 @@ public class TileMap : MonoBehaviour {
 		
 		mesh_filter.mesh = mesh;
 		mesh_collider.sharedMesh = mesh;
-		Debug.Log ("Done Mesh!");
 
+        //Add textures to our mesh
         BuildTexture();
-
-    }
-
-    Color[][] ChopUpTiles()
-    {
-        int numTilesPerRow = (terrainTiles.width / tileResolution);
-        int numRows = (terrainTiles.height / tileResolution);
-
-        Color[][] tiles = new Color[numTilesPerRow * numRows][];
-
-        for (int y = 0; y < numRows; y++)
-        {
-            for (int x = 0; x < numTilesPerRow; x++)
-            {
-                tiles[y * numTilesPerRow + x] = terrainTiles.GetPixels(x * tileResolution, y * tileResolution, tileResolution, tileResolution);
-            }
-        }
-        return tiles;
     }
 
     void BuildTexture()
     {
-
-
         int texWidth = size_x * tileResolution;
         int texHeight = size_z * tileResolution;
         Texture2D texture = new Texture2D(texWidth, texHeight);
-
         Color[][] tiles = ChopUpTiles();
 
         for (int y = 0; y < size_z; y++)
@@ -128,7 +114,23 @@ public class TileMap : MonoBehaviour {
 
         MeshRenderer mesh_renderer = GetComponent<MeshRenderer>();
         mesh_renderer.sharedMaterials[0].mainTexture = texture;
+    }
 
-        Debug.Log("Done Texture!");
+    //Chop up the mesh in pieces that fit and then color them.
+    Color[][] ChopUpTiles()
+    {
+        int numTilesPerRow = (terrainTiles.width / tileResolution);
+        int numRows = (terrainTiles.height / tileResolution);
+
+        Color[][] tiles = new Color[numTilesPerRow * numRows][];
+
+        for (int y = 0; y < numRows; y++)
+        {
+            for (int x = 0; x < numTilesPerRow; x++)
+            {
+                tiles[y * numTilesPerRow + x] = terrainTiles.GetPixels(x * tileResolution, y * tileResolution, tileResolution, tileResolution);
+            }
+        }
+        return tiles;
     }
 }
