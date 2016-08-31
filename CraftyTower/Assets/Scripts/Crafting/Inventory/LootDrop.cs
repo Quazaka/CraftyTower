@@ -13,10 +13,9 @@ public class LootDrop : MonoBehaviour {
     [SerializeField]
     private int _count = 0;
 
-    // prefab of an item in inventory - needed because loot is 3D gameObjects (GUI-elements in inventory)
-    public GameObject inventoryItemPrefab;
-
     private SpriteRenderer spriteRend;
+
+    private bool wasLooted;
 
     #region Getters
     public ItemTypes Type
@@ -48,7 +47,10 @@ public class LootDrop : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(Vector3.up, 40 * Time.deltaTime);
+        if (!wasLooted)
+        {
+            transform.Rotate(Vector3.up, 40 * Time.deltaTime);
+        }       
     }
 
     void OnMouseUp()
@@ -57,6 +59,7 @@ public class LootDrop : MonoBehaviour {
         {
             OnLoot(this);
         }
-        Destroy(this.gameObject);
+        wasLooted = true;
+        transform.rotation = Quaternion.identity;
     }
 }
