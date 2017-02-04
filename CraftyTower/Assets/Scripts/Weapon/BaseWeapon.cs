@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 public abstract class BaseWeapon : MonoBehaviour {
-    //Projectile
-    public GameObject projectilePrefab;
+
+    //Interfaces
+    protected IHealth enemyHealth;
+    protected IDamage dealDamageToEnemy;
 
     //Enemy list
     public List<GameObject> enemyList = new List<GameObject>();
@@ -16,7 +18,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     //Current Target
     protected GameObject currentTarget;
 
-    //Firerate and range defined here as they are used in the base class
+    //Firerate and range defined here as they are needed for all weapons
     public abstract float Firerate { get; set; }
     public abstract float Range { get; set; }
 
@@ -36,7 +38,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     }
 
     //Get enemies in range of a center
-    internal List<GameObject> GetEnemisInRange(Vector3 center, float radius)
+    internal List<GameObject> GetEnemiesInRange(Vector3 center, float radius)
     {
         //OverlapSphere returns an array - converted to list here
         Collider[] hitCollidersArray = Physics.OverlapSphere(center, radius);
@@ -66,7 +68,7 @@ public abstract class BaseWeapon : MonoBehaviour {
     {
         while (true)
         {
-            enemyList = GetEnemisInRange(transform.position, Range);
+            enemyList = GetEnemiesInRange(transform.position, Range);
 
             yield return new WaitForSeconds(0.5f);
         }
@@ -90,6 +92,7 @@ public abstract class BaseWeapon : MonoBehaviour {
                 //Prevent overkill
                 if (enemyHealth.futureHealth > 0)
                 {
+                    Debug.Log("Shooting");
                     Shoot(currentTarget); // shoot
                 }
                 else
@@ -119,29 +122,42 @@ public abstract class BaseWeapon : MonoBehaviour {
 
     }
 
-    //Arrow implementation of shoot
-    protected virtual void Shoot(GameObject currentTarget)
+    //Implementation of shoot
+    private void Shoot(GameObject currentTarget)
     {
         //Remove null targets from enemyList
         RemoveNullObjectFromList(enemyList);
 
-        //Create projectile and set it's target and damage
-        GameObject projectile = (GameObject)Instantiate(projectilePrefab, transform.position, Quaternion.identity); //create projectile
-        SetProjectileDamage(projectile);
-        projectile.transform.parent = gameObject.transform;
-        projectile = setTarget(projectile, currentTarget);
-
-        //Set future health to prevent overkill
-        IHealth enemyHealth = currentTarget.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= CalculateDamageWithVariables();
+        //Ready up the weapon and shoot at the target
+        ReadyWeapon(currentTarget, true);
     }
 
-    //Set target in subclass to ensure corret script is initialzed on projectile
-    protected abstract GameObject setTarget(GameObject projectile, GameObject currentTarget);
+    //Readies the weapon by calculating the projectile damage and setting the target.
+    //bool determines whether modifiers such as crit chance etc. are used.
+    protected abstract void ReadyWeapon(GameObject target, bool useModifiers);
 
-    //Calculate actual damage in subclasses
+    //Prevents the weapon from shooting projectiles at enemies that would be dead at next hit
+    //Damage done is handled by each weapons unique projectile
+    protected void PreventMultipleProjectiles(BaseProjectile projectile)
+    {
+        //Calculate the future health of an enemy based on what projectile is supposed to hit it
+        enemyHealth = currentTarget.GetComponent<BaseEnemy>();
+        enemyHealth.futureHealth -= projectile.Damage;
+        //Debug.Log("future health: " + enemyHealth.futureHealth);
+    }
+
+    //Prevents weapons without projectiles attacking enemies more than necessary
+    //Damage done is passed as an argument in the weapons class
+    protected void PreventMultipleAttacks(GameObject target, float damage)
+    {
+        enemyHealth = target.GetComponent<BaseEnemy>();
+        enemyHealth.futureHealth -= damage;
+
+        //Damage target instantly using the IDamage interface because there is no projectile
+        dealDamageToEnemy = target.GetComponent<BaseEnemy>();
+        dealDamageToEnemy.damage = damage;
+    }
+
+    //Calculate modified damage in subclasses
     protected abstract float CalculateDamageWithVariables();
-
-    //Set projectile damage in subclasses.
-    protected abstract void SetProjectileDamage(GameObject projectile);
 }

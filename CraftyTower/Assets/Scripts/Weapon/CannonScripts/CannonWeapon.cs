@@ -4,6 +4,10 @@ using System;
 
 public class CannonWeapon : BaseWeapon
 {
+    //Projectile
+    public GameObject projectilePrefab;
+    private CannonProjectile currentProjectile;
+
     #region Upgrades
     private float _damage = 1;
     private float _tempDamage; //Store damage with modifiers
@@ -11,7 +15,7 @@ public class CannonWeapon : BaseWeapon
     private float _firerate = 1;
     private float _splashRadius = 1;
     //multiplyers: 1f = 100% damage, 1.1f = 110% damage, 0.5f = 50% damage
-    private float _splashDamageMultiplyer = 0.1f;
+    private float _splashDamageMultiplier = 0.1f;
     private float _damageToNormalEnemyMultiplier = 1; 
     private float _damageToFastEnemyMultiplier = 1;
     private bool _haveBurningEffect = false;
@@ -45,8 +49,8 @@ public class CannonWeapon : BaseWeapon
 
     public float SplashRadiusMultiplier
     {
-        get { return _splashDamageMultiplyer; }
-        set { _splashDamageMultiplyer = value; }
+        get { return _splashDamageMultiplier; }
+        set { _splashDamageMultiplier = value; }
     }
 
     public float DamageToNormalEnemyMultiplier
@@ -90,36 +94,43 @@ public class CannonWeapon : BaseWeapon
     //Calculate damage based on variables
     protected override float CalculateDamageWithVariables()
     {
-        float tempDamage = _damage;
+        currentProjectile.Damage = _damage;
+        currentProjectile.SplashRadius = _splashRadius;
+        currentProjectile.SplashDamage *= _splashDamageMultiplier;
 
         if(currentTarget.tag == "FastEnemy")
         {
-            tempDamage *= _damageToFastEnemyMultiplier;
+            currentProjectile.Damage *= _damageToFastEnemyMultiplier;
         }
         else if(currentTarget.tag == "NormalEnemy")
         {
-            tempDamage *= _damageToNormalEnemyMultiplier;
+            currentProjectile.Damage *= _damageToNormalEnemyMultiplier;
         }
 
-        _tempDamage = tempDamage;
-        return tempDamage;
+        return currentProjectile.Damage;
     }
-
     #endregion
 
-    //set target
-    protected override GameObject setTarget(GameObject projectile, GameObject currentTarget)
+    //Ready up the weapon, calculate projectile damage, set its target and parent.
+    //bool used to determine whether to use modifiers such as splashdamage etc.
+    protected override void ReadyWeapon(GameObject target, bool modifyDamage)
     {
-        projectile.GetComponent<CannonProjectile>().target = currentTarget.transform;
+        //Create projectile, set parent and target
+        currentProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<CannonProjectile>();        
+        currentProjectile.transform.parent = this.gameObject.transform;
+        currentProjectile.target = target.transform;
 
-        return projectile;
-    }
+        if (modifyDamage)
+        {
+            currentProjectile.Damage = CalculateDamageWithVariables();
+        }
+        else
+        {
+            currentProjectile.Damage = _damage;
+            currentProjectile.SplashRadius = _splashRadius;
+            currentProjectile.SplashDamage *= _splashDamageMultiplier;
+        }
 
-    protected override void SetProjectileDamage(GameObject projectile)
-    {
-        var proj = projectile.GetComponent<CannonProjectile>();
-        proj.Damage = _tempDamage;
-        proj.SplashRadius = _splashRadius;
-        proj.SplashDamage = _tempDamage * _splashDamageMultiplyer;
+        PreventMultipleProjectiles(currentProjectile);
     }
 }

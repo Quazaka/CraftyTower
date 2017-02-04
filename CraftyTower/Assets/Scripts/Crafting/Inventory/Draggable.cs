@@ -6,59 +6,93 @@ using UnityEngine.UI;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    GameObject itemCopy;
-    InventoryManager iMan;
+    private TileSelector selector;
 
-    private Vector3 itemPos;
-    private bool copyWasPlaced;
+    private Inventory inventory;
+    private LootDrop upgrade; // the upgrade we are dragging
+    private GameObject upgradeCopy; // used for dragging when stacking multiple of the same upgrade
+    private Vector3 upgradeInventoryPos; // the upgrades position in the inventory UI
+    private bool usingUpgradeCopy; // used to determine if we drag the copy or the original upgrade
 
     void Start()
     {
-        iMan = GameObject.FindGameObjectWithTag("Inventory").GetComponentInChildren<InventoryManager>();
+        selector = GameObject.FindGameObjectWithTag("Selector").GetComponent<TileSelector>();
+
+        inventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
+        upgrade = GetComponent<LootDrop>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        MakeDraggableCopy();
-
-        itemPos = Camera.main.WorldToScreenPoint(itemCopy.transform.position);
+        // If we have more than one of this item use a copy to drag around
+        if (Inventory.inventory[this.name].ItemCount > 1)
+        {            
+            MakeDraggableCopy();
+            usingUpgradeCopy = true;            
+        }
+        else // if not use the original
+        {
+            usingUpgradeCopy = false;
+            upgradeInventoryPos = transform.position;
+        }
     }
 
-    // this is a loop
+    // Dragging around the copy or the original
     public void OnDrag(PointerEventData eventData)
     {
-        Vector3 newScreenPoint = new Vector3(eventData.position.x, eventData.position.y, itemPos.z);
-        itemCopy.transform.position = Camera.main.ScreenToWorldPoint(newScreenPoint);
+        if (usingUpgradeCopy)
+        {
+            upgradeCopy.transform.position = eventData.position;           
+        }
+        else
+        {
+            transform.position = eventData.position;
+        }        
     }
 
+    // We stopped dragging - Released finger from mouse
     public void OnEndDrag(PointerEventData eventData)
     {
-        // TODO: Have this bool be changed whenever we take an item from inventory and place it in the grid
         // We didn't place the item we dragged out - put it back in the inventory
-        if (!copyWasPlaced)
+        if (!selector.PlaceUpgrade())
         {
-            iMan.UpdateCount(true);           
+            if (usingUpgradeCopy)
+            {                
+                Destroy(upgradeCopy);
+                inventory.UpdateCount(true, upgrade);
+            }
+            else
+            {
+                // Snap back to the inventory if it isn't placed
+                transform.position = upgradeInventoryPos;
+            }              
         }
-        else // We placed the item on the grid, remove it from inventory
+        else // We placed the item on the grid - Destroy a copy or remove the item from inventory
         {
-            iMan.UpdateCount(false);
+            if (usingUpgradeCopy)
+            {
+                Destroy(upgradeCopy);
+            }
+            else // Destroy the original
+            {
+                // Counts to zero and removes the item from inventory and deletes gameobject
+                inventory.UpdateCount(false, upgrade);
+            }
         }
-        Destroy(itemCopy);
     }
 
-    // When we start dragging the item in the inventory,
-    // we create a copy of it, add an image component and set it to be the same as the item we're dragging
-    // We update the count of the item (false = -1)
+    // We drag a copy if we have more than one of the item in inventory
     private void MakeDraggableCopy()
     {
-        itemCopy = new GameObject();
+        upgradeCopy = new GameObject();
         // set the copys parent so we can see the image (parent is inventoryPanel)
-        //itemCopy.transform.parent = this.transform.parent;
+        upgradeCopy.transform.SetParent(transform.parent);
 
         // add an image component and set its sprite to be the same as the item in the inventory we selected
-        itemCopy.AddComponent(typeof(SpriteRenderer));
-        itemCopy.GetComponent<SpriteRenderer>().sprite = this.GetComponent<Image>().sprite;
+        upgradeCopy.AddComponent(typeof(Image));
+        upgradeCopy.GetComponent<Image>().sprite = this.GetComponent<Image>().sprite;
 
-        iMan.UpdateCount(false);        
+        // Count down to show that we've dragged an item out of the inventory
+        inventory.UpdateCount(false, upgrade);
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class TowerCube : MonoBehaviour {
 
-    private bool towerPlaced;
+    private bool towerCubePlaced;
 
     private GameObject towerObj;
     private Rigidbody cubeRigid;
@@ -18,7 +18,7 @@ public class TowerCube : MonoBehaviour {
             cubeRigid = gameObject.AddComponent<Rigidbody>() as Rigidbody;
             cubeRigid.useGravity = true;
 
-            towerPlaced = false;
+            towerCubePlaced = false;
         }
 
         // if not destroy the TowerCube
@@ -31,17 +31,17 @@ public class TowerCube : MonoBehaviour {
     // Why are each cubed stacked like shit
     protected void OnTriggerEnter(Collider co)
     {        
-        if ((co.tag == "Tower" || co.tag == "TowerCube") && !towerPlaced)
+        if ((co.tag == "Tower") && !towerCubePlaced)
         {
-            towerPlaced = true;
+            towerCubePlaced = true;
 
             cubeRigid.isKinematic = true;
-            Destroy(GetComponent<Rigidbody>(), 2);
+            Destroy(cubeRigid);
 
             Vector3 cubePos = co.transform.position;
-            cubePos.y += towerObj.transform.position.y * 2;
+            cubePos.y += this.transform.localScale.y;
             this.transform.position = cubePos;
-        
+            this.tag = "Tower";
             Debug.Log("Placed towerCube");
         }
     }

@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
 using CraftyTower.Items;
 
+[RequireComponent(typeof(SpriteRenderer), typeof(Image))]
 public class LootDrop : MonoBehaviour {
 
-    public delegate void InventoryManager(LootDrop i);
-    public static event InventoryManager OnLoot;
+    public delegate void Inventory(LootDrop loot);
+    public static event Inventory OnLoot;
 
     private ItemTypes _type;
-    [SerializeField]
     private Sprite _itemSprite;
-    [SerializeField]
     private int _count = 0;
 
+    // spriteRenderer is used in world space (when loot is dropped - instantiated)
     private SpriteRenderer spriteRend;
+    // Image is used in the UI - makes dragging it around much easier
+    private Image inventoryImage;
 
     private bool wasLooted;
 
@@ -39,9 +42,9 @@ public class LootDrop : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        // set sprite
         spriteRend = GetComponent<SpriteRenderer>();
-        spriteRend.sprite = _itemSprite;
+        inventoryImage = GetComponent<Image>();
+        SetSprite();
     }
 
     // Update is called once per frame
@@ -55,11 +58,25 @@ public class LootDrop : MonoBehaviour {
 
     void OnMouseUp()
     {
-        if(OnLoot != null)
+        if (OnLoot != null)
         {
             OnLoot(this);
+            wasLooted = true;
+            transform.rotation = Quaternion.identity;
+            SetSprite();
+        }  
+    }
+
+    // Changes how to show the loot based on whether it is looted or not
+    public void SetSprite()
+    {
+        if (!wasLooted)
+        {
+            spriteRend.sprite = _itemSprite;
         }
-        wasLooted = true;
-        transform.rotation = Quaternion.identity;
+        else
+        {
+            inventoryImage.sprite = _itemSprite;
+        }
     }
 }

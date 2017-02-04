@@ -9,8 +9,8 @@ public class NormalEnemy : BaseEnemy {
         base.Start();
 
         //Enemy stats
-        _moveSpeed = 1;
-        _attackDmg = 10; //CalculateDamage(currentWaveLevel);
+        _moveSpeed = 2;
+        _attackDmg = 1; //CalculateDamage(currentWaveLevel);
         _attackRate = 1;
         _damageReduction = 0;
         _futureHp = CalculateHp(currentWaveLevel);

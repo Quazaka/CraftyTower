@@ -61,8 +61,7 @@ public class WeaponChooser : MonoBehaviour
     public void CreateWeapon()
     {       
         Transform Tc = Instantiate(towerCubePrefab.transform, towerPos, Quaternion.identity) as Transform;
-        GameObject towerParent = GameObject.FindGameObjectWithTag("Tower");
-        Tc.parent = towerParent.transform;
+        Tc.parent = GameObject.FindGameObjectWithTag("Tower").transform;
 
         GameObject curWep =  Instantiate(selectedWeapon, towerPos, Quaternion.identity) as GameObject;
         curWep.transform.parent = Tc;

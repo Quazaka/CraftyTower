@@ -96,14 +96,8 @@ public class Tower : MonoBehaviour, IDamage, IExperience {
         }
 
         // map the health to the sprite and set the health text
-        healthContent.fillAmount = mapHealth();
+        healthContent.fillAmount = currentHealth / startingHealth;
         setHealthText();
-    }
-
-    // float value used to map the health to the fillAmount of the sprite(goes from 0 - 1)
-    private float mapHealth()
-    {
-        return currentHealth / startingHealth;
     }
 
     // Health is shown as text on the healthbar

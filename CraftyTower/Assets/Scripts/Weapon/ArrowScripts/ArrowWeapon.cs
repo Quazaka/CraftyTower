@@ -4,9 +4,12 @@ using System;
 
 public class ArrowWeapon : BaseWeapon {
 
+    //Projectile
+    public GameObject projectilePrefab;
+    private ArrowProjectile currentProjectile;
+
     #region Upgrade variables
     private float _damage = 1;
-    private float _tempDamage; // Store damage with modifiers
     private float _firerate = 1;
     private float _range = 5;
     private float _critChance = 50;
@@ -17,11 +20,11 @@ public class ArrowWeapon : BaseWeapon {
     private float _poisonDamagePerSec = 0;
 
     #region get/set
-    public float Damage
-    {
-        get { return _damage; }
-        set { _damage = value; }
-    }
+    //public float Damage
+    //{
+    //    get { return _damage; }
+    //    set { _damage = value; }
+    //}
 
     public override float Firerate
     {
@@ -76,7 +79,7 @@ public class ArrowWeapon : BaseWeapon {
     //Calculate damage based on variables
     protected override float CalculateDamageWithVariables()
     {
-        float tempDamage = _damage;
+        currentProjectile.Damage = _damage;
 
         //Crit
         if (_critChance != 0) //If we can crit
@@ -84,33 +87,41 @@ public class ArrowWeapon : BaseWeapon {
             int i = UnityEngine.Random.Range(0, 100);// Pick a random number from 0 to 100
 
             if (i < _critChance) {
-                tempDamage *= _critMultiplier;
+                //modifiedDamage *= _critMultiplier;
+                currentProjectile.Damage *= _critMultiplier;
             }
         }
 
         //Boss bonus damage
         if (currentTarget.tag == "Boss")
         {
-            tempDamage *= _damageToBossMultiplier;
+            currentProjectile.Damage *= _damageToBossMultiplier;
         }
 
-        _tempDamage = tempDamage;
-        return tempDamage;
+        Debug.Log("modified arrowprojectile dmg: " + currentProjectile.Damage);
+        return currentProjectile.Damage;
     }
     #endregion
 
-    //Set Target
-    protected override GameObject setTarget(GameObject projectile, GameObject currentTarget)
+    //Ready up the weapon, calculate projectile damage, set its target and parent.
+    //bool used to determine whether to use modifiers such as crit etc.
+    protected override void ReadyWeapon(GameObject target, bool modifyDamage)
     {
-        projectile.GetComponent<ArrowProjectile>().target = currentTarget.transform; //set target
+        //Create projectile, set parent and target
+        currentProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity).GetComponent<ArrowProjectile>();
+        currentProjectile.transform.parent = this.gameObject.transform;
+        currentProjectile.target = target.transform;
 
-        return projectile;
-    }
+        if (modifyDamage)
+        {
+            currentProjectile.Damage = CalculateDamageWithVariables();
+        }
+        else
+        {
+            currentProjectile.Damage = _damage;
+        }
 
-    //Set damage on projectile
-    protected override void SetProjectileDamage(GameObject projectile)
-    {
-        projectile.GetComponent<ArrowProjectile>().Damage = _tempDamage; 
+        PreventMultipleProjectiles(currentProjectile);
     }
 }
 

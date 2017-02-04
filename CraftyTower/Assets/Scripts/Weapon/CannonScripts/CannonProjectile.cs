@@ -3,7 +3,7 @@
 public class CannonProjectile : BaseProjectile
 {
     //Interfaces
-    protected IDamage enemy;
+    protected IDamage dealDamageToEnemy;
 
     //Splash radius
     private float _SplashRadius;
@@ -55,8 +55,8 @@ public class CannonProjectile : BaseProjectile
             {
                 if (hitColliders[i] != null)
                 {
-                    enemy = (IDamage)hitColliders[i].GetComponent<BaseEnemy>();
-                    enemy.damage = _damage;
+                    dealDamageToEnemy = (IDamage)hitColliders[i].GetComponent<BaseEnemy>();
+                    dealDamageToEnemy.damage = _damage;
                     Destroy(gameObject);
                 }
             }

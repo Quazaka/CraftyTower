@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.Crafting.Grid
+namespace CraftyTower.Crafting
 {
-    class TileType
+    public enum TileType
     {
+        Error = 0,
+        Free,
+        Taken,
+        Locked
     }
 }

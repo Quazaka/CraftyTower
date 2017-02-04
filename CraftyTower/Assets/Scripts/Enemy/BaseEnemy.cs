@@ -121,7 +121,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     // Stop creep when hitting tower
     protected void OnTriggerEnter(Collider co)
     {
-        if(co.name == "BaseBlock")
+        if(co.name == "BaseBlock" || co.tag == "TowerCube")
         {
             stop = true;            
         }
@@ -131,7 +131,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     private void OnTriggerStay(Collider co)
     {
         // Attack tower
-        if (co.name == "BaseBlock")
+        if (co.name == "BaseBlock" || co.tag == "TowerCube")
         {          
             target = co.GetComponent<Tower>();
             if (Time.time > nextAttack)
@@ -154,7 +154,7 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     }
 
     void KillAndUpdate()
-    {        
+    {
         if (hp <= 0)
         {
             Wave.enemyCountLeft--;
