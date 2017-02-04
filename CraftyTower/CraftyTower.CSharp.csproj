@@ -97,6 +97,9 @@
     <Compile Include="Assets\Scripts\Tower\TowerCube.cs" />
     <Compile Include="Assets\Scripts\UI\MenuHandler.cs" />
     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
+    <Compile Include="Assets\Scripts\Upgrades\UpgradeArrow.cs" />
+    <Compile Include="Assets\Scripts\Upgrades\UpgradeBase.cs" />
+    <Compile Include="Assets\Scripts\Upgrades\UpgradeEnum.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />
     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\BaseProjectile.cs" />

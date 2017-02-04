@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Resources\LightningBolt\Editor\LightningBoltEditor.cs" />
+    <Compile Include="Assets\Scripts\Editor\UpgradeBaseInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\LightningBolt\Readme.txt" />
