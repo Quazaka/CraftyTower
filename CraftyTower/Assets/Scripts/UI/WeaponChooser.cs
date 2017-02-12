@@ -59,13 +59,14 @@ public class WeaponChooser : MonoBehaviour
     #region Weapon Selection/Creation
     // Weapon instantiate
     public void CreateWeapon()
-    {       
+    {
         Transform Tc = Instantiate(towerCubePrefab.transform, towerPos, Quaternion.identity) as Transform;
-        Tc.parent = GameObject.FindGameObjectWithTag("Tower").transform;
+        Tc.parent = GameObject.FindGameObjectWithTag("Tower").transform.parent;
 
         GameObject curWep =  Instantiate(selectedWeapon, towerPos, Quaternion.identity) as GameObject;
         curWep.transform.parent = Tc;
 
+        Tc.name = selectedWeapon.name + " Tower";
         Debug.Log("Created " + selectedWeapon.name);
     }
 

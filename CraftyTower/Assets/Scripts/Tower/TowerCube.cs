@@ -28,20 +28,20 @@ public class TowerCube : MonoBehaviour {
         }
     }
 
-    // Why are each cubed stacked like shit
+    // Stack towercubes when entering trigger
     protected void OnTriggerEnter(Collider co)
     {        
         if ((co.tag == "Tower") && !towerCubePlaced)
-        {
-            towerCubePlaced = true;
-
-            cubeRigid.isKinematic = true;
-            Destroy(cubeRigid);
+        {            
+            Destroy(cubeRigid); //Destroy the rigidbody
 
             Vector3 cubePos = co.transform.position;
-            cubePos.y += this.transform.localScale.y;
-            this.transform.position = cubePos;
-            this.tag = "Tower";
+
+            //Set the y position based on collider
+            cubePos.y += transform.localScale.y;            
+            transform.position = cubePos;
+            tag = "Tower";
+            towerCubePlaced = true;
             Debug.Log("Placed towerCube");
         }
     }
