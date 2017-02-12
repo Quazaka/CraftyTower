@@ -141,7 +141,6 @@ App_Data/*.ldf
 # =============== #
 Temp/
 Library/
-*.meta
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
