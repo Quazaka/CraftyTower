@@ -96,6 +96,8 @@
     <Compile Include="Assets\Scripts\Tower\Tower.cs" />
     <Compile Include="Assets\Scripts\Tower\TowerCube.cs" />
     <Compile Include="Assets\Scripts\UI\MenuHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\TowerUI.cs" />
+    <Compile Include="Assets\Scripts\UI\WaveUI.cs" />
     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
     <Compile Include="Assets\Scripts\Upgrades\UpgradeArrow.cs" />
     <Compile Include="Assets\Scripts\Upgrades\UpgradeBase.cs" />
@@ -108,9 +110,13 @@
     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\LightningScripts\LightningWeapon.cs" />
     <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />
+    <Compile Include="Assets\Scripts\XRayReplacement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\LightningBolt\Readme.txt" />
+    <None Include="Assets\Shaders\Normal-Diffuse-Stencil-Write.shader" />
+    <None Include="Assets\Shaders\Normal-Diffuse-XRay-Replaceable.shader" />
+    <None Include="Assets\Shaders\XRay-ColoredOutline.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

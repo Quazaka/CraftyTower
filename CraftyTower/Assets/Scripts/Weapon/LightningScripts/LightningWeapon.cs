@@ -8,115 +8,40 @@ public class LightningWeapon : BaseWeapon {
 
     private List<GameObject> targetsInArcRange = new List<GameObject>(); //List to store enemies that can be arced to
     private List<GameObject> targets = new List<GameObject>(); //List to store enemies that should be hit by attack - arcchain
-    private float lifetime = 0.2f; //How long the arc should be displayed
-    private float _arcDamage; //Store damage during arcs
 
-    #region Upgrades
+    #region Unique Lightning Variables
     [Range (0f, 100f)]
-    [SerializeField]
-    private float _damage = 1; //private constant as damage
-    private float _firerate = 1;
-    private float _range = 5;
-    private float _arcChance = 50; //Chance that an attack will arc - between 0 & 100.
-    private float _damageLossPerArc = 0.5f; // Damage loss per arc - 0.5f = 50% damage loss
-    private int _arcCount = 5; //Number of times the lightning should arc
-    private float _arcDistance = 10.5f; //Max distance between arcs
-    private bool _haveRodEffect = false;
-    private float _rodChance = 0;
-    private float _rodDuration = 0;
-    private float _rodCooldown = 0;
-    private float _rodDamage = 0;
+    private float arcDamage; // Store damage during arcs
+    private float arcChance; // Chance that an attack will arc - between 0 & 100.
+    private float damageLossPerArc; // Damage loss per arc - 0.5f = 50% damage loss
+    private int arcCount; // Number of times the lightning should arc
+    private float arcDistance; // Max distance between arcs
+    private float lifetime; // How long the arc should be displayed
+
+    // TODO: Implement Rod effect - Not sure what this means (guessing constant lightning on one enemy)
+    //private bool _haveRodEffect = false;
+    //private float _rodChance = 0;
+    //private float _rodDuration = 0;
+    //private float _rodCooldown = 0;
+    //private float _rodDamage = 0;
     #endregion
-
-    #region get/set
-
-    public float Damage
+    
+    protected override void Start()
     {
-        get { return _damage; }
-        set { _damage = value; }
-    }
+        // Base Variables
+        Damage = 1f;
+        Firerate = 1f;
+        Range = 5f;
+        // Unique modifiers
+        arcChance = 50f;
+        damageLossPerArc = 0.5f;
+        arcCount = 5;
+        arcDistance = 10.5f;
+        lifetime = 0.2f;
 
-    public override float Firerate
-    {
-        get { return _firerate; }
-        set { _firerate = value; }
+        base.Start();
     }
-
-    public override float Range
-    {
-        get { return _range; }
-        set { _range = value; }
-    }
-
-    public float ArcChance
-    {
-        get{ return _arcChance; }
-        set{ _arcChance = value; }
-    }
-
-    public float DamageLossPerArc
-    {
-        get{ return _damageLossPerArc; }
-        set{ _damageLossPerArc = value; }
-    }
-
-    public int ArcCount
-    {
-        get{ return _arcCount; }
-        set{ _arcCount = value; }
-    }
-
-    public float ArcDistance
-    {
-        get{ return _arcDistance; }
-        set{ _arcDistance = value; }
-    }
-
-    // TODO implement Rod effect in lightning weapon.
-    public bool HaveRodEffect
-    {
-        get{ return _haveRodEffect; }
-        set{ _haveRodEffect = value; }
-    }
-
-    public float RodChance
-    {
-        get { return _rodChance; }
-        set { _rodChance = value; }
-    }
-
-    public float RodDuration
-    {
-        get{ return _rodDuration; }
-        set{ _rodDuration = value; }
-    }
-
-    public float RodCooldown
-    {
-        get{ return _rodCooldown; }
-        set{ _rodCooldown = value; }
-    }
-
-    public float RodDamage
-    {
-        get{ return _rodDamage; }
-        set{ _rodDamage = value; }
-    }
-    #endregion
-
-    void Awake() // This is used instead of Start(), as start runs in the baseclass.
-    {
-        targetSwitch = 1; //Closest target
-    }
-
-    #region upgrades
-    //Calculate damage based on variables
-    protected override float CalculateDamageWithVariables()
-    {
-        return _damage;
-    }
-    #endregion
-
+    
     //Ready up the weapon and attack, calculating damage and finding targets
     protected override void ReadyWeapon(GameObject target, bool modifyDamage)
     {
@@ -126,15 +51,21 @@ public class LightningWeapon : BaseWeapon {
 
         if (modifyDamage)
         {
-            _arcDamage = CalculateDamageWithVariables();
+            arcDamage = CalculateDamageWithVariables();
         }
         else
         {
-            _arcDamage = _damage;
+            arcDamage = Damage;
         }
 
         SetTargets(target);
         Attack(); 
+    }
+
+    //Calculate damage based on variables
+    protected override float CalculateDamageWithVariables()
+    {
+        return Damage;
     }
 
     //Gets the targets that the attack will arc to based on first target
@@ -147,14 +78,14 @@ public class LightningWeapon : BaseWeapon {
             Targeting scriptTargeting = GetComponent<Targeting>();
             GameObject nextTarget = originTarget;
 
-            for (int i = 0; i < _arcCount; i++)
+            for (int i = 0; i < arcCount; i++)
             {
                 Debug.Log("Arc #" + i);
-                targetsInArcRange = base.GetEnemiesInRange(nextTarget.transform.position, _arcDistance); //Get all enemies in range of a target
+                targetsInArcRange = base.GetEnemiesInRange(nextTarget.transform.position, arcDistance); //Get all enemies in range of a target
                 targetsInArcRange.RemoveAll(j => targets.Contains(j)); //Remove targets that are already in the arc chain
 
                 //Use targeting script to determine what enemy in range to add to list of targets
-                nextTarget = scriptTargeting.ChooseTargetScanType(targetsInArcRange, targetSwitch);
+                nextTarget = scriptTargeting.ChooseTargetScanType(targetsInArcRange, targetingType);
                 if (nextTarget == null) { break; }
                 targets.Add(nextTarget); //Add target to list of targets to be hit by arc chain
                 targetsInArcRange.Clear(); //Clear the list for next iteration
@@ -201,29 +132,29 @@ public class LightningWeapon : BaseWeapon {
         {
             if (i > 0) // if the attacks arcs - reduce the damage done (i == 0 is first target and should do max damage)
             {
-                _arcDamage *= _damageLossPerArc;
+                arcDamage *= damageLossPerArc;
             }
-            PreventMultipleAttacks(target, _arcDamage);
+            PreventMultipleAttacks(target, arcDamage);
             i++;
         }
 
-        _arcDamage = _damage; //Reset the _arcDamage to equal the base _damage so each unique chain does equal damage.
+        arcDamage = Damage; //Reset the _arcDamage to equal the base _damage so each unique chain does equal damage.
     }
 
     // Determines whether the attack should arc or not
     private bool PerformArc()
     {
         //If we can arc
-        if (_arcChance > 0)
+        if (arcChance > 0)
         {
             // prevent out of range in Random below.
-            if (_arcChance > 100) { _arcChance = 100; }
+            if (arcChance > 100) { arcChance = 100; }
 
             // Pick a random number from 0 to 100
             int i = UnityEngine.Random.Range(0, 100);
 
             // if i is smaller than arcchance then peform an arc.
-            if (i <= _arcChance) { return true; }
+            if (i <= arcChance) { return true; }
         }
         return false;
     }

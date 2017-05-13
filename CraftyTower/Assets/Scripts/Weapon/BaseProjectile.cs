@@ -2,21 +2,16 @@
 using System.Collections;
 using System;
 
-public abstract class BaseProjectile : MonoBehaviour {
+public class BaseProjectile : MonoBehaviour {
 
-    protected IDamage enemyHit;
+    protected IDamage targetIDamage;
 
     // Target (set by weapon)
     public Transform target;
 
-    //Bullet damage
-    public abstract float Damage { get; set; }
+    public float Damage { get; set; }
+    protected virtual float Speed { get; set; }
 
-
-    //Speed
-    public abstract float Speed { get; }
-
-    // Update is called once per frame
     void FixedUpdate() {
         // Still has a Target?
         if (target)
@@ -38,8 +33,8 @@ public abstract class BaseProjectile : MonoBehaviour {
     {
         if (co.GetComponent<BaseEnemy>())
         {
-            enemyHit = co.GetComponent<BaseEnemy>();
-            enemyHit.damage = Damage;
+            targetIDamage = co.GetComponent<BaseEnemy>();
+            targetIDamage.takeDamage = Damage;
             Destroy(gameObject);
         }
     }

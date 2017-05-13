@@ -6,23 +6,30 @@ using System.Linq;
 public abstract class BaseWeapon : MonoBehaviour {
 
     //Interfaces
-    protected IHealth enemyHealth;
-    protected IDamage dealDamageToEnemy;
+    protected IHealth enemyIHealth;
+    protected IDamage targetIDamage;
 
     //Enemy list
     public List<GameObject> enemyList = new List<GameObject>();
 
     //Caseswith to choose targeting type
-    protected int targetSwitch = 1;
+    protected int targetingType = 1;
 
     //Current Target
     protected GameObject currentTarget;
 
-    //Firerate and range defined here as they are needed for all weapons
-    public abstract float Firerate { get; set; }
-    public abstract float Range { get; set; }
+    #region Get/Set Base Weapon Properties
+    protected float Damage { get; set; }
+    protected float Firerate { get; set; }
+    protected float Range { get; set; }
+    #endregion
 
-    void Start()
+    // TODO: Implement weapon modifiers - such as poison/burning/freezing etc.
+    //protected bool HavePoisonEffect { get; set; }
+    //protected float PoisonDuration { get; set; }
+    //protected float PoisonDamagePerSec { get; set; }
+
+    protected virtual void Start()
     {
         StartCoroutine(Co_ShootAtEnemies());
         StartCoroutine(Co_UpdateEnemyList());
@@ -83,7 +90,7 @@ public abstract class BaseWeapon : MonoBehaviour {
             {
                 //Targeting script
                 Targeting scriptTargeting = GetComponent<Targeting>();
-                currentTarget = scriptTargeting.ChooseTargetScanType(enemyList, targetSwitch);
+                currentTarget = scriptTargeting.ChooseTargetScanType(enemyList, targetingType);
 
                 if (isTargetNull(currentTarget)) { enemyList.Remove(currentTarget); break; }
                 //Access target futureHealth using IHealth
@@ -141,21 +148,21 @@ public abstract class BaseWeapon : MonoBehaviour {
     protected void PreventMultipleProjectiles(BaseProjectile projectile)
     {
         //Calculate the future health of an enemy based on what projectile is supposed to hit it
-        enemyHealth = currentTarget.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= projectile.Damage;
+        enemyIHealth = currentTarget.GetComponent<BaseEnemy>();
+        enemyIHealth.futureHealth -= projectile.Damage;
         //Debug.Log("future health: " + enemyHealth.futureHealth);
     }
 
     //Prevents weapons without projectiles attacking enemies more than necessary
     //Damage done is passed as an argument in the weapons class
-    protected void PreventMultipleAttacks(GameObject target, float damage)
+    protected void PreventMultipleAttacks(GameObject enemy, float damage)
     {
-        enemyHealth = target.GetComponent<BaseEnemy>();
-        enemyHealth.futureHealth -= damage;
+        enemyIHealth = enemy.GetComponent<BaseEnemy>();
+        enemyIHealth.futureHealth -= damage;
 
         //Damage target instantly using the IDamage interface because there is no projectile
-        dealDamageToEnemy = target.GetComponent<BaseEnemy>();
-        dealDamageToEnemy.damage = damage;
+        targetIDamage = enemy.GetComponent<BaseEnemy>();
+        targetIDamage.takeDamage = damage;
     }
 
     //Calculate modified damage in subclasses

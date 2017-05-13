@@ -1,98 +1,118 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
-    #region initialization
-    //private IWaveLevel WaveLevel;
-    private IDamage target;
-    private IWave Wave;
-    private IExperience Experience;
+public class BaseEnemy : MonoBehaviour, IDamage, IHealth {
 
-    protected GameObject towerObj;
+    public delegate void WaveUI();
+    public static event WaveUI OnEnemySpawned;
+    public static event WaveUI OnEnemyHit;
+
+    #region Base Enemy Variables
+    private IDamage targetIDamage;
+    protected IWave Wave;
+
+    private Transform tower;
     private Vector3 towerPos;
 
+    //[SerializeField]
+    //private float attackDmg;
+    //[SerializeField]
+    //private float attackRate;
+    //[SerializeField]
+    //private float damageReduction;
+    //[SerializeField]
+    //private float futureHealthPoints;
+    //[SerializeField]
+    //private float healthPoints;
+    //[SerializeField]
+    //private float moveSpeed;
+    //[SerializeField]
+    //private bool isHitByLightning;
+
+    private float nextAttack = 0;
     private bool stop = false;
 
-    [SerializeField]
-    protected float _attackDmg;
-    [SerializeField]
-    protected float _attackRate;
-    [SerializeField]
-    protected float _damageReduction;
-    [SerializeField]
-    protected float _futureHp;
-    [SerializeField]
-    protected float _hp;
-    [SerializeField]
-    protected float _moveSpeed;
-    [SerializeField]
-    protected bool _isHitByLightning;
+    private Color normalColor;
+    private Color hitColor = Color.red;
+    private Material enemyMaterial;
+    #endregion
 
-    public abstract float hp { get; set; }
-    public abstract float futureHp { get; set; }
-    public abstract float attackDmg { get; set; }
-    public abstract float attackRate { get; set; }
-    public abstract float moveSpeed { get; set; }
-    public abstract float damageReduction { get; set; }
-
-    protected int currentWaveLevel;
-    protected float nextAttack = 0;
-
+    #region Get/Set
+    protected float AttackDamage { get; set; }
+    protected virtual float AttackRate { get; set; }
+    protected virtual float MoveSpeed { get; set; }
+    // TODO: Implement damage reduction as armor
+    protected virtual float DamageReduction { get; set; }
+    #endregion
+    
+    #region Interface implementation
     //IDamage
-    public float damage
+    public float takeDamage
     {
         set { TakeDamage(value); }
     }
-
-    //IHealth - real health
-    public float health
+    
+    //Take damage from bullet
+    private void TakeDamage(float damage)
     {
-        get { return hp; } //Read enemy hp
+        StartCoroutine(ChangeEnemyColorOnHit());
+        health -= damage;
     }
+
+    //IHealth - Actual health
+    public float health { get; set; }
 
     //IHealth - future health, used to prevent overkill
-    public float futureHealth
+    public float futureHealth { get; set; }
+    #endregion
+
+    #region Virtual Methods
+    protected virtual int CalculateHealth(float health, int wave)
     {
-        get { return futureHp; }
-        set { futureHp = value; }
+        return (int)Mathf.Pow(wave, health);
     }
-    #endregion initialization
 
-    //Abstrat methods
-    protected abstract int CalculateHp(int wave);
-    protected abstract float CalculateDamage(int wave);
-
-    protected virtual void Update()
+    protected virtual float CalculateDamage(float damage, int wave)
     {
-
+        return damage * wave;
     }
+    #endregion
 
     // Use this for initialization
     protected virtual void Start ()
     {
         //Store current wavelevel
         Wave = GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<Spawner>();
-        currentWaveLevel = Wave.level;
 
-        // Find tower object
-        towerObj = GameObject.FindGameObjectWithTag("Tower");
+        tower = GameObject.FindGameObjectWithTag("Tower").transform.root; // Using root to ensure highest element in the hierachy
+
         // If it exist make sure the creeps move along the ground.
-        if (towerObj != null)
+        if (tower != null)
         {
-            // TODO: Should make a empty GameObject at tower-origin and have enemies move towards that
-            // instead of a specific part of the tower (tower y-pos is based it's height making enemies float if this isn't done)
-            towerPos = towerObj.transform.position;
-            towerPos.y -= (towerObj.transform.localScale.y / 2); // Lower the y-coords by the scale of the tower
-            towerPos.y += (this.transform.localScale.y / 2); // Increase the y-coords by the scale of the enemy-type
+            towerPos = tower.transform.position;
+            towerPos.y = (this.transform.localScale.y / 2); // Set the y-coordinate of the tower to be equal to half the height of the spawned enemy
+
+            // Set tower as target for iDamage to use
+            targetIDamage = tower.GetComponent<Tower>();
+
+            // Get the material and set a reference to the enemy's normal color so we can change color on hit
+            enemyMaterial = gameObject.GetComponent<Renderer>().material;
+            normalColor = enemyMaterial.color;
         }
-        // if not destroy the creep
+        // if not destroy the enemy
         else
         {
-            Wave.enemyCountLeft--;
+            Wave.enemiesAlive--;
             Destroy(gameObject);
         }
-
-        Experience = GameObject.FindGameObjectWithTag("Tower").GetComponent<Tower>();
+    }
+     
+    protected void OnSpawn()
+    {
+        if (OnEnemySpawned != null)
+        {
+            OnEnemySpawned();
+        }
     }
 
     // Update is called once per frame
@@ -103,19 +123,12 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
         {
             Move();
         }
-	}
-
-    //Take damage from bullet
-    protected void TakeDamage(float damage)
-    {
-        StartCoroutine(ChangeEnemyColorOnHit());
-        hp -= damage;
     }
 
     // Move the creep towards the tower in real time
     protected virtual void Move()
     {
-        transform.position = Vector3.MoveTowards(transform.position, towerPos, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, towerPos, MoveSpeed * Time.deltaTime);
     }
 
     // Stop creep when hitting tower
@@ -132,12 +145,11 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     {
         // Attack tower
         if (co.name == "TowerBase")
-        {          
-            target = co.transform.parent.GetComponent<Tower>();
+        {
             if (Time.time > nextAttack)
             {
-                target.damage = attackDmg;
-                nextAttack = Time.time + attackRate;
+                targetIDamage.takeDamage = AttackDamage;
+                nextAttack = Time.time + AttackRate;
             }         
         }
     }
@@ -155,39 +167,26 @@ public abstract class BaseEnemy : MonoBehaviour, IDamage, IHealth {
 
     void KillAndUpdate()
     {
-        if (hp <= 0)
+        if (health <= 0)
         {
-            Wave.enemyCountLeft--;
+            Wave.enemiesAlive--;
+            if (OnEnemyHit != null)
+            {
+                OnEnemyHit();
+            }
             Destroy(gameObject);
-            // Get experience when enemy is dead
-            //Experience.experience = 1;
         }
     }
     #endregion
 
-
     //Shortly change color on enemy when hit.
-    #region OnHit
     IEnumerator ChangeEnemyColorOnHit()
     {
-        Color normalColor = gameObject.GetComponent<Renderer>().material.color;
-
-        SetHitColor();
+        // Change color when hit - then wait
+        enemyMaterial.color = hitColor;
         yield return new WaitForSeconds(0.10f);
-        SetNormalColor(normalColor);
+        
+        // Change color back to normal
+        enemyMaterial.color = normalColor;
     }
-
-    private void SetHitColor()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
-        return;
-    }
-
-    private void SetNormalColor(Color normalColor)
-    {
-        gameObject.GetComponent<Renderer>().material.color = normalColor;
-        return;
-    }
-    #endregion  
-
 }

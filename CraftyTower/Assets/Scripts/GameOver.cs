@@ -8,7 +8,7 @@ public class GameOver : MonoBehaviour {
     // Using the interface to the stop spawnController from spawning
     private IGameOver gameOver;
 
-    private GameObject tower;
+    private Transform tower;
 
     public Text restartText;
     public Text gameOverText;
@@ -17,7 +17,7 @@ public class GameOver : MonoBehaviour {
     {
         // Find the spawncontroller script so we can reference the isGameOver through the interface
         gameOver = GameObject.FindGameObjectWithTag("SpawnControl").GetComponent<Spawner>();
-        tower = GameObject.FindGameObjectWithTag("Tower");
+        tower = GameObject.FindGameObjectWithTag("Tower").transform.root;
 
         restartText.text = "";
         gameOverText.text = "";
@@ -29,7 +29,7 @@ public class GameOver : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                // load first scene in the scenemanager when R is pressed
+                // load Tower scene in the scenemanager when R is pressed
                 SceneManager.LoadScene("Scene_Tower");
                 // we could also do this since we do not have any other scenes.
                 //SceneManager.LoadScene(0);
@@ -55,7 +55,7 @@ public class GameOver : MonoBehaviour {
 
         // Kill all creeps then destroy the event subscribers
         KillAllCreeps();
-        Destroy(tower);
+        Destroy(tower.gameObject);
         SetGameOverText();
     }
 

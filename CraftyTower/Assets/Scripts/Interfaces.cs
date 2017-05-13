@@ -3,7 +3,7 @@ using System.Collections;
 
 public interface IDamage
 {
-    float damage
+    float takeDamage
     {
         set;
     }
@@ -13,6 +13,7 @@ public interface IHealth
     float health
     {
         get;
+        set;
     }
     float futureHealth
     {
@@ -27,41 +28,23 @@ public interface IWave
     int level
     {
         get;
+        set;
     }
 
-    int enemyCountLeft
+    int enemiesAlive
     {
         get;
         set;
     }
 
-    //float timeLeft
-    //{
-    //    get;
-    //}
-
-    string enemyType
+    int enemiesSpawned
     {
         get;
-    }
-}
-
-public interface IWaveEnemyHp
-{
-    int damage
-    {
-        get;
+        set;
     }
 }
 #endregion
 
-public interface IExperience
-{
-    int experience
-    {
-        set;
-    }
-}
 
 public interface IGameOver
 {

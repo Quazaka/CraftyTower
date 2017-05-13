@@ -5,8 +5,10 @@ using CraftyTower.Spawner;
 
 public class Spawner : MonoBehaviour, IWave, IGameOver
 {
-    #region Variables
+    public delegate void WaveUI(int enemiesToSpawn);
+    public static event WaveUI OnWaveStart;
 
+    #region Variables
     private GameObject[] spawns; // An array of possible spawnpoints (Child objects of the Spawner)
     [SerializeField]
     private GameObject[] enemyPrefabs;// An array of the enemy prefabs
@@ -20,28 +22,18 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
     private bool checkEnemiesAlive; // Used to determine if we should check if there are still enemies alive
     
     private int enemiesToSpawn; // Total number of enemies to spawn
-    private int enemiesSpawned; // Current number of enemies spawned - also counting dead enemies
     
     private float spawnRate = 0.5f; // wait spawnRate seconds before spawning next enemy   
     private float waveWait = 5f; // wait waveWait seconds before starting new wave - when spawntype is set to Wave
-    private float waveTime = 20f; // A wave lasts waveTime second when spawntype is set to TimedWave
-
-    [SerializeField]
-    private int _level = 0; // The current level (corresponds to number of waves spawned)
-    private bool _isGameOver; // used to check whether the game is over or not
-    [SerializeField]
-    private int _enemiesAlive; // Current number of alive enemies
+    private float waveTime = 2f; // A wave lasts waveTime second when spawntype is set to TimedWave
 
     #region Interface Implementation
-    int IWave.level { get { return _level; } }
-    int IWave.enemyCountLeft { get { return _enemiesAlive; } set { _enemiesAlive = value; } }
-    string IWave.enemyType { get { return enemyType.ToString(); } }
-
-    bool IGameOver.isGameOver
-    {
-        get { return _isGameOver; }
-        set { _isGameOver = value; }
-    }
+    // IWave
+    public int level { get; set; } // The current level (corresponds to number of waves spawned)
+    public int enemiesAlive { get; set; } // Current number of alive enemies
+    public int enemiesSpawned { get; set; } // Current number of enemies spawned - also counting dead enemies
+    // IGameOver
+    public bool isGameOver { get; set; } // used to check whether the game is over or not
     #endregion
 
     #endregion
@@ -66,7 +58,7 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
     private IEnumerator DoSpawn()
     {        
         UpdateWaveStats();        
-        while (spawn && !_isGameOver)
+        while (spawn && !isGameOver)
         {            
             switch (spawnMode)
             {
@@ -109,7 +101,7 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
             spawnedEnemy.parent = curSpawn.transform;
             // Increase the total number of enemies spawned and the number of enemies alive
             enemiesSpawned++;
-            _enemiesAlive++;
+            enemiesAlive++;
         }
         else
         {
@@ -147,8 +139,11 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
             float z = spawnPos.z;
             spawnPos.x = Random.Range(-z, z);
         }
-        return spawnPos;
 
+        // Set y-coordinate based on enemy scale
+        spawnPos.y += enemyPrefabs[(int)enemyType].transform.localScale.y / 2;
+
+        return spawnPos;
     }
 
     /// <summary>
@@ -156,12 +151,12 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
     /// </summary>
     private void DecideEnemyType()
     {
-        if ((_level % 10) == 0) // spawn a boss every 10th level
+        if ((level % 10) == 0) // spawn a boss every 10th level
         {
             enemyType = EnemyTypes.Boss;
             enemiesToSpawn = 1;
         }
-        else if ((_level % 3) == 0) // spawn fast enemies every 3rd level
+        else if ((level % 3) == 0) // spawn fast enemies every 3rd level
         {
             enemyType = EnemyTypes.Fast;
             enemiesToSpawn = 40;
@@ -169,7 +164,7 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
         else // spawn normal enemies when no other condition is met
         {
             enemyType = EnemyTypes.Normal;
-            enemiesToSpawn = 20;
+            enemiesToSpawn = 1;
         }
 
         // Ensure every enemy will spawn within waveTime seconds.
@@ -214,10 +209,10 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
         if (checkEnemiesAlive)
         {
             // if all spawned enemies are dead, get ready to spawn a new wave
-            if (_enemiesAlive <= 0)
+            if (enemiesAlive <= 0)
             {               
                 checkEnemiesAlive = false;
-                Debug.Log("All enemies are dead -  Wave " + _level + " over");
+                Debug.Log("All enemies are dead -  Wave " + level + " over");
                 yield return new WaitForSeconds(waveWait);
                 // We are not ready to spawn a new wave unless we've waited for it                
                 UpdateWaveStats();                
@@ -250,8 +245,9 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
     /// </summary>
     public void UpdateWaveStats()
     {
-        _level++;
+        level++;
         enemiesSpawned = 0;
+
         if (spawnMode != SpawnMode.Single)
         {
             spawnWave = true;
@@ -260,6 +256,11 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
 
         // Decide the enemyType and use the int value from the enemyType enum to determine what prefab to use             
         DecideEnemyType();
-        Debug.Log("Started wave: " + _level + ". " + enemyType.ToString() + " enemies incoming");
+
+        if (OnWaveStart != null)
+        {
+            OnWaveStart(enemiesToSpawn);
+        }
+        Debug.Log("Started wave: " + level + ". " + enemyType.ToString() + " enemies incoming");
     }
 }
