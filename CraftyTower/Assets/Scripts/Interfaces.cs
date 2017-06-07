@@ -3,10 +3,7 @@ using System.Collections;
 
 public interface IDamage
 {
-    float takeDamage
-    {
-        set;
-    }
+    void TakeDamage(float damage);
 }
 public interface IHealth
 {

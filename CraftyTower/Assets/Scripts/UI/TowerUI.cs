@@ -12,7 +12,7 @@ public class TowerUI : MonoBehaviour {
     private Sprite[] sprites; //All icons for health
     [SerializeField]
     private Text healthText;
-    private string texturePath = "Sprites/HealthBar/Icons"; //Path in resources for health icons
+    private string texturePath = "Sprites/HealthBar/HealthIcons"; //Path in resources for health icons
 
     private bool shake = false, left = true; //toggle shake on/off
     private float shaketime = 0;

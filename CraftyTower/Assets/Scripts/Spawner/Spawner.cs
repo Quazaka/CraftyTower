@@ -23,9 +23,9 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
     
     private int enemiesToSpawn; // Total number of enemies to spawn
     
-    private float spawnRate = 0.5f; // wait spawnRate seconds before spawning next enemy   
+    private float spawnRate = 0.75f; // wait spawnRate seconds before spawning next enemy   
     private float waveWait = 5f; // wait waveWait seconds before starting new wave - when spawntype is set to Wave
-    private float waveTime = 2f; // A wave lasts waveTime second when spawntype is set to TimedWave
+    private float waveTime = 20f; // A wave lasts waveTime second when spawntype is set to TimedWave
 
     #region Interface Implementation
     // IWave
@@ -164,11 +164,11 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
         else // spawn normal enemies when no other condition is met
         {
             enemyType = EnemyTypes.Normal;
-            enemiesToSpawn = 1;
+            enemiesToSpawn = 20;
         }
 
-        // Ensure every enemy will spawn within waveTime seconds.
-        spawnRate = (waveTime / enemiesToSpawn);
+        // Ensure every enemy will spawn within waveTime seconds when using TimedWave mode.
+        if (spawnMode == SpawnMode.Single) { spawnRate = (waveTime / enemiesToSpawn); }        
     }
     #endregion
     

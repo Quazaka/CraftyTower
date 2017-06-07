@@ -34,7 +34,7 @@ public class BaseProjectile : MonoBehaviour {
         if (co.GetComponent<BaseEnemy>())
         {
             targetIDamage = co.GetComponent<BaseEnemy>();
-            targetIDamage.takeDamage = Damage;
+            targetIDamage.TakeDamage(Damage);
             Destroy(gameObject);
         }
     }

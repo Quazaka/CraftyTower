@@ -44,16 +44,10 @@ public class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     // TODO: Implement damage reduction as armor
     protected virtual float DamageReduction { get; set; }
     #endregion
-    
+
     #region Interface implementation
-    //IDamage
-    public float takeDamage
-    {
-        set { TakeDamage(value); }
-    }
-    
-    //Take damage from bullet
-    private void TakeDamage(float damage)
+    //IDamage - Take damage from bullet
+    public void TakeDamage(float damage)
     {
         StartCoroutine(ChangeEnemyColorOnHit());
         health -= damage;
@@ -148,7 +142,7 @@ public class BaseEnemy : MonoBehaviour, IDamage, IHealth {
         {
             if (Time.time > nextAttack)
             {
-                targetIDamage.takeDamage = AttackDamage;
+                targetIDamage.TakeDamage(AttackDamage);
                 nextAttack = Time.time + AttackRate;
             }         
         }

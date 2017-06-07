@@ -31,7 +31,7 @@ public class CannonProjectile : BaseProjectile
                 if (hitColliders[i] != null)
                 {
                     targetIDamage = hitColliders[i].GetComponent<BaseEnemy>();
-                    targetIDamage.takeDamage = Damage;
+                    targetIDamage.TakeDamage(Damage);
                     Destroy(gameObject);
                 }
             }

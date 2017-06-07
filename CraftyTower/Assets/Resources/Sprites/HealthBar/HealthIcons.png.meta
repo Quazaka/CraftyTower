@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: fec53a2ebe0da334092c046f2823881c
-timeCreated: 1486665508
+guid: 6842021ed70b5c34890586dfe7e9bfc9
+timeCreated: 1495713656
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Icons_0
-    21300002: Icons_1
-    21300004: Icons_2
-    21300006: Icons_3
-    21300008: Icons_4
+    21300000: HealthIcons_0
+    21300002: HealthIcons_1
+    21300004: HealthIcons_2
+    21300006: HealthIcons_3
+    21300008: HealthIcons_4
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -71,71 +71,79 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Icons_0
+      name: HealthIcons_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 22
-        height: 19
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons_1
+      name: HealthIcons_1
       rect:
         serializedVersion: 2
-        x: 22
+        x: 32
         y: 0
-        width: 22
-        height: 19
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons_2
+      name: HealthIcons_2
       rect:
         serializedVersion: 2
-        x: 44
+        x: 64
         y: 0
-        width: 22
-        height: 19
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons_3
+      name: HealthIcons_3
       rect:
         serializedVersion: 2
-        x: 66
+        x: 96
         y: 0
-        width: 22
-        height: 19
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons_4
+      name: HealthIcons_4
       rect:
         serializedVersion: 2
-        x: 88
+        x: 128
         y: 0
-        width: 22
-        height: 19
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

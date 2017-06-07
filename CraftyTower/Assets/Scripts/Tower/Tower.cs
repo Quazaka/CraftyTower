@@ -40,14 +40,8 @@ public class Tower : MonoBehaviour, IDamage {
         }
     }
 
-    // From Damage interface
-    public float takeDamage
-    {
-        set { TakeDamage(value); }
-    }
-
-    // Take damage from enemies
-    private void TakeDamage(float damage)
+    // From Damage interface - take damage from enemies
+    public void TakeDamage(float damage)
     {
         // Lower current health based on damage input
         currentHealth -= damage;

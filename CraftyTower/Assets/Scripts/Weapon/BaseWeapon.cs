@@ -162,7 +162,7 @@ public abstract class BaseWeapon : MonoBehaviour {
 
         //Damage target instantly using the IDamage interface because there is no projectile
         targetIDamage = enemy.GetComponent<BaseEnemy>();
-        targetIDamage.takeDamage = damage;
+        targetIDamage.TakeDamage(damage);
     }
 
     //Calculate modified damage in subclasses
