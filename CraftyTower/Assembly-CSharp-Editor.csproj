@@ -6,10 +6,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{AD0BAF72-6154-B690-FB1D-E73ACBFA4007}</ProjectGuid>
+    <ProjectGuid>{98E04E07-F0AB-E95A-0A2D-46410E993900}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
@@ -46,60 +46,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Resources\LightningBolt\LightningBoltScript.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Grid\CraftingGrid.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Grid\TempScript.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Grid\TileSelector.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Grid\TileType.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Inventory\Draggable.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Inventory\Inventory.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Inventory\ItemDropper.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Inventory\ItemsEnum.cs" />
-     <Compile Include="Assets\Scripts\Crafting\Inventory\LootDrop.cs" />
-     <Compile Include="Assets\Scripts\Enemy\BaseEnemy.cs" />
-     <Compile Include="Assets\Scripts\Enemy\BossEnemy.cs" />
-     <Compile Include="Assets\Scripts\Enemy\FastEnemy.cs" />
-     <Compile Include="Assets\Scripts\Enemy\NormalEnemy.cs" />
-     <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\GameOver.cs" />
-     <Compile Include="Assets\Scripts\Interfaces.cs" />
-     <Compile Include="Assets\Scripts\Spawner\Spawner.cs" />
-     <Compile Include="Assets\Scripts\Spawner\SpawnerEnums.cs" />
-     <Compile Include="Assets\Scripts\Tower\Tower.cs" />
-     <Compile Include="Assets\Scripts\Tower\TowerCube.cs" />
-     <Compile Include="Assets\Scripts\UI\MenuHandler.cs" />
-     <Compile Include="Assets\Scripts\UI\TowerUI.cs" />
-     <Compile Include="Assets\Scripts\UI\WaveUI.cs" />
-     <Compile Include="Assets\Scripts\UI\WeaponChooser.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Arrow\ArrowRoom.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Arrow\ArrowUpgrade.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\BaseRoom.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\BaseUpgrade.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Cannon\CannonRoom.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Cannon\CannonUpgrade.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Tesla\TeslaRoom.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Tesla\TeslaUpgrade.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Tower\TowerRoom.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\Tower\TowerUpgrade.cs" />
-     <Compile Include="Assets\Scripts\Upgrades\UpgradeEnum.cs" />
-     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowProjectile.cs" />
-     <Compile Include="Assets\Scripts\Weapon\ArrowScripts\ArrowWeapon.cs" />
-     <Compile Include="Assets\Scripts\Weapon\BaseProjectile.cs" />
-     <Compile Include="Assets\Scripts\Weapon\BaseWeapon.cs" />
-     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonProjectile.cs" />
-     <Compile Include="Assets\Scripts\Weapon\CannonScripts\CannonWeapon.cs" />
-     <Compile Include="Assets\Scripts\Weapon\LightningScripts\LightningWeapon.cs" />
-     <Compile Include="Assets\Scripts\Weapon\Targeting.cs" />
-     <Compile Include="Assets\Scripts\XRayReplacement.cs" />
+     <Compile Include="Assets\Resources\LightningBolt\Editor\LightningBoltEditor.cs" />
+     <Compile Include="Assets\Scripts\Editor\UpgradeBaseInspector.cs" />
      <None Include="Assets\Resources\LightningBolt\Readme.txt" />
      <None Include="Assets\Shaders\Normal-Diffuse-Stencil-Write.shader" />
      <None Include="Assets\Shaders\Normal-Diffuse-XRay-Replaceable.shader" />
      <None Include="Assets\Shaders\XRay-ColoredOutline.shader" />
+ <Reference Include="UnityEditor.Advertisements">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.UI">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Networking">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.TestRunner">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/Editor/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
@@ -107,15 +76,52 @@
  <Reference Include="nunit.framework">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/nunit.framework.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.TreeEditor">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Analytics">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/Editor/UnityEditor.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.HoloLens">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Editor/UnityEditor.HoloLens.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.Purchasing">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/Editor/UnityEditor.Purchasing.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.VR">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WebGL.Extensions">
+ <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+ <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+ <HintPath>C:/Users/James/Documents/GitHub/CraftyTower/CraftyTower/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+ </Reference>
+ <Reference Include="SyntaxTree.VisualStudio.Unity.Messaging">
+ <HintPath>C:/Users/James/Documents/GitHub/CraftyTower/CraftyTower/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Messaging.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityVS.VersionSpecific">
+ <HintPath>C:/Users/James/Documents/GitHub/CraftyTower/CraftyTower/Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{AD0BAF72-6154-B690-FB1D-E73ACBFA4007}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

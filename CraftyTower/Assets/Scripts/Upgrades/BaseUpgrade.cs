@@ -1,31 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using CraftyTower.Upgrades;
+using System.Collections.Generic;
 using System.Linq;
 
-public abstract class UpgradeBase : MonoBehaviour {
+public abstract class BaseUpgrade : MonoBehaviour {
 
     protected string displayName; // Display name in GUI
     protected Texture2D sprite; // sprite in inventory
-    protected TowerType type; // tower this upgrade fit
     protected Rarity rarity; // upgrade rarity
-    protected string checksum; // Dictonary key
-    protected bool weaponTire2; // tower got the extra upgrade, ex Poison Arrow.
-    protected int wave; // Wave is used to scale stats.
-    protected GameObject prefab;
-    protected float scaling; // Scale stat range
-    protected GameObject weaponObj; // reference to the weapon
-    protected float minRoll; //Stat Floor
-    protected float maxRoll; //Stat Celing
+    protected BaseRoom room; // Weapon Room. (Weapon type)
+    protected string checksum; // Dictonary key used for stacking in inventory
+    protected bool weaponTire2 = false; // tower got the extra upgrade, ex Poison Arrow.
+    protected int wave = 1; // Wave is used to scale stats. //TODO: Connect to global variable
+    protected GameObject prefab; // Prefab for upgrade
+    protected float minRoll; //Stat Floor multiplier
+    protected float maxRoll; //Stat Celing multiplier
 
     // Use this for initialization
     void Start () {
 
         ChildStart(); // Start child class
-        RollRarity();
+        RollRarity(); 
         SetStatRange(); 
-        RollStats(); 
-        //HitMeDebug();
+        RollStats();
+        CalcChecksum();
     }
 
     // Roll the rarity of an item 
@@ -54,10 +52,9 @@ public abstract class UpgradeBase : MonoBehaviour {
                 randomValue -= (int)rarityList[i];
             }
         }
-        throw new System.Exception("Something went wrong when deciding rarity of upgrade");      
     }
 
-
+    //Roll Large or Small set of stats in Child.
     private void RollStats()
     {
         if (weaponTire2)
@@ -70,8 +67,8 @@ public abstract class UpgradeBase : MonoBehaviour {
         }
     }
 
-    //Decide what the range for stats roll (min to max)
-    private void SetStatRange()
+    //Decide what the range for stats rolls (min to max)
+    protected void SetStatRange()
     {
 
         float multiplyer = 0;
@@ -94,10 +91,17 @@ public abstract class UpgradeBase : MonoBehaviour {
                 break;
         }
 
-        float scaling = 0.05f * wave; // increase range with wave level
+        float scaling = 1.05f * (wave / 3); // increase range with wave level
 
-        minRoll = Mathf.RoundToInt(scaling * multiplyer); 
-        maxRoll = Mathf.RoundToInt((1 + 2 * scaling) * multiplyer); 
+        minRoll = Mathf.RoundToInt((scaling * multiplyer)); 
+        maxRoll = Mathf.RoundToInt((scaling * multiplyer) * 2); 
+
+        //Prevent upgrade from not gaining an effect.
+        if(maxRoll == 0 || minRoll == 0)
+        {
+            maxRoll = 1;
+            minRoll = 1;
+        }
     }
 
     //abstracts
@@ -113,10 +117,20 @@ public abstract class UpgradeBase : MonoBehaviour {
     //Debug
     public void HitMeDebug()
     {
-        for (int i = 0; i < 1000; i++)
-        {
-            RollRarity();
-            Debug.Log(rarity);
-        }
+        rarity = Rarity.Common;
+        SetStatRange();
+        Debug.Log(rarity + minRoll.ToString() + "-" + maxRoll.ToString());
+
+        rarity = Rarity.Uncommon;
+        SetStatRange();
+        Debug.Log(rarity + minRoll.ToString() + "-" + maxRoll.ToString());
+
+        rarity = Rarity.Rare;
+        SetStatRange();
+        Debug.Log(rarity + minRoll.ToString() + "-" + maxRoll.ToString());
+
+        rarity = Rarity.Legendary;
+        SetStatRange();
+        Debug.Log(rarity + minRoll.ToString() + "-" + maxRoll.ToString());
     }
 }

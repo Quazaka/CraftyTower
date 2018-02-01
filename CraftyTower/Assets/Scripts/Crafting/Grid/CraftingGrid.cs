@@ -29,7 +29,7 @@ public class CraftingGrid : MonoBehaviour {
         if (craftingGrid == null)
         {
             craftingGrid = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {

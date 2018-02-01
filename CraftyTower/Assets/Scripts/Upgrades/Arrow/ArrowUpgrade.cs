@@ -1,41 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using CraftyTower.Upgrades;
 
-class UpgradeArrow : UpgradeBase
+public class ArrowUpgrade : BaseUpgrade
 {
-
     //Arrow stats
-    private float damage;
-    private float range;
-    private float firerate;
-    private float critChance;
-    private float critDamage;
-    private float bonussDamageToBoss;
-    private float PoiDoTDmg;
-    private float PoiDuration;
-    private float PoiReducedArmor;
+    private float damage = 0;
+    private float range = 0;
+    private float firerate = 0;
+    private float critChance = 0;
+    private float critDamage = 0;
+    private float bonussDamageToBoss = 0;
+
+    private float PoiDoTDmg = 0;
+    private float PoiDuration = 0;
+    private float PoiReducedArmor = 0;
 
     //Used as start
     protected override void ChildStart()
     {
-        //Fetch weapon
-        //weaponObj = GameObject.FindGameObjectWithTag("ArrowWeapon");
-        //ArrowWeapon weapon = weaponObj.GetComponent(typeof(ArrowWeapon)) as ArrowWeapon;
-
+        
         //Set tower type
-        base.type = TowerType.ArrowTower;
+        //base.room = ArrowRoom;
 
     }
 
     //Excluding poison upgrade
     protected override void RollSmallSet()
     {
-        /*foreach (float stat in arrowStats)
-        {
-            Debug.Log(stat.ToString());
-        }*/
+
     }
 
     //Including poison upgrade
@@ -47,7 +40,7 @@ class UpgradeArrow : UpgradeBase
     //Write a uniqe key used for stacking in inventory
     protected override void CalcChecksum()
     {
-        string checkSum = type.ToString()
+        string checkSum = room.ToString()
             + damage.ToString()
             + range.ToString()
             + firerate.ToString()

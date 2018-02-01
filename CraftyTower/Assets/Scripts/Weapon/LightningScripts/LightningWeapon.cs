@@ -101,7 +101,7 @@ public class LightningWeapon : BaseWeapon {
 
         //How many parts to divide the line into
         int arcPoints = targets.Count() + 1;        
-        arcChain.numPositions = arcPoints;
+        arcChain.positionCount = arcPoints;
 
         //Set width of lightning and start position
         arcChain.startWidth = 0.25f;
