@@ -23,7 +23,7 @@
     /// <summary>
     /// Types of enemies that can be spawned (Sort by alphabethic because we use Resources.LoadAll)
     /// </summary>
-    public enum EnemyTypes
+    public enum EnemyType
     {
         Boss = 0,
         Fast,

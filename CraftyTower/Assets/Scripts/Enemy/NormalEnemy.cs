@@ -2,20 +2,23 @@
 using System.Collections;
 using System;
 
-public class NormalEnemy : BaseEnemy {
+public class NormalEnemy : Enemy, IEnemy
+{
+    private Tower tower;
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
+        tower = FindObjectOfType<Tower>();
+    }
 
-        //Enemy stats
-        MoveSpeed = 2;
-        AttackDamage = 1; //CalculateDamage(0.1f, Wave.level);
-        AttackRate = 1;
-        DamageReduction = 0;
-        health = CalculateHealth(1.5f, Wave.level);
-        futureHealth = health;
+    public void Move(Vector3 target)
+    {
+        Debug.Log("FUCK");
+        //throw new NotImplementedException();
+    }
 
-        OnSpawn();
+    private void FixedUpdate()
+    {
+        Move(tower.transform.position);
     }
 }

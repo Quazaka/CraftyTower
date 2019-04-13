@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
 
     [SerializeField]
     private SpawnMode spawnMode = SpawnMode.Wave; // The type of spawning
-    private EnemyTypes enemyType = EnemyTypes.Normal; // The type of enemy to spawn;
+    private EnemyType enemyType = EnemyType.Normal; // The type of enemy to spawn;
 
     public bool spawn = true; // Decide whether the spawner should spawn or not
     private bool spawnWave; // Used to determine whether a new wave should be spawned
@@ -153,17 +153,17 @@ public class Spawner : MonoBehaviour, IWave, IGameOver
     {
         if ((level % 10) == 0) // spawn a boss every 10th level
         {
-            enemyType = EnemyTypes.Boss;
+            enemyType = EnemyType.Boss;
             enemiesToSpawn = 1;
         }
         else if ((level % 3) == 0) // spawn fast enemies every 3rd level
         {
-            enemyType = EnemyTypes.Fast;
+            enemyType = EnemyType.Fast;
             enemiesToSpawn = 40;
         }
         else // spawn normal enemies when no other condition is met
         {
-            enemyType = EnemyTypes.Normal;
+            enemyType = EnemyType.Normal;
             enemiesToSpawn = 20;
         }
 

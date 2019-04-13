@@ -14,21 +14,6 @@ public class BaseEnemy : MonoBehaviour, IDamage, IHealth {
     private Transform tower;
     private Vector3 towerPos;
 
-    //[SerializeField]
-    //private float attackDmg;
-    //[SerializeField]
-    //private float attackRate;
-    //[SerializeField]
-    //private float damageReduction;
-    //[SerializeField]
-    //private float futureHealthPoints;
-    //[SerializeField]
-    //private float healthPoints;
-    //[SerializeField]
-    //private float moveSpeed;
-    //[SerializeField]
-    //private bool isHitByLightning;
-
     private float nextAttack = 0;
     private bool stop = false;
 
